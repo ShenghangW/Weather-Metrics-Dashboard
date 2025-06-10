@@ -1,10 +1,5 @@
 package app;
 
-<<<<<<< Updated upstream
-import io.javalin.http.Context;
-import io.javalin.http.Handler;
-
-=======
 import java.util.ArrayList;
 
 import io.javalin.http.Context;
@@ -16,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
->>>>>>> Stashed changes
 /**
  * Example Index HTML class using Javalin
  * <p>
