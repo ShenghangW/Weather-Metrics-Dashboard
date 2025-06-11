@@ -46,29 +46,21 @@ public class PageIndex implements Handler {
         // This uses a Java v15+ Text Block
         html = html + """
              <div class='topnav'>
-<<<<<<< Updated upstream
                 <a><label for="side-toggle" class="hamburger-icon">
                 <img src="hamburger.png" alt="Open side menu" />
                 </label></a>
                 <a href='/'><img class ="logo-main" src="logo.png"/></a>
                 <a href='mission.html'>Our Mission</a>
 		        <a href="equipment.html">Our Data</a>
-                <form class="search-bar">
-                <input type="text" name="query" placeholder ="Search for Data..."/>
-                <button type ="submit"><img src="search.png"></button>
+                <form class="search">
+                <div class="left">
+                <input class="search-bar" type="text" name="query" placeholder ="Search for Data..."/>
+                </div>
+                <div class="right">
+                <button class = "sumbit-button" type ="submit"><img src="search.png"></button>
+                </div>
                 </form>
-=======
-                <a href='/'>Homepage</a>
-                <a href='mission.html'>Our Mission</a>
-		        <a href="equipment.html">Climate Equipment</a>
-                <a href='page2A.html'>Sub Task 2.A</a>
-                <a href='page2B.html'>Sub Task 2.B</a>
-                <a href='page2C.html'>Sub Task 2.C</a>
-                <a href='page3A.html'>Sub Task 3.A</a>
-                <a href='page3B.html'>Sub Task 3.B</a>
-                <a href='page3C.html'>Sub Task 3.C</a>
             </div>
->>>>>>> Stashed changes
         """;
 
         // Add header content block
