@@ -27,86 +27,86 @@ public class PageEquip implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-        // // Create a simple HTML webpage in a String
-        // String html = "<html>";
+        // Create a simple HTML webpage in a String
+        String html = "<html>";
 
-        // // Add some Head information
-        // html = html + "<head>" + 
-        //        "<title>Climate Equipment</title>";
+        // Add some Head information
+        html = html + "<head>" + 
+               "<title>Climate Equipment</title>";
 
-        // // Add some CSS (external file)
-        // html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
-        // html = html + "</head>";
+        // Add some CSS (external file)
+        html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
+        html = html + "</head>";
 
-        // // Add the body
-        // html = html + "<body>";
+        // Add the body
+        html = html + "<body>";
 
-        // // Add the topnav
-        // // This uses a Java v15+ Text Block
-        // html = html + """
-        //     <div class='topnav'>
-        //         <a href='/'>Homepage</a>
-        //         <a href='mission.html'>Our Mission</a>
-		//         <a href="equipment.html">Climate Equipment</a>
-        //         <a href='page2A.html'>Sub Task 2.A</a>
-        //         <a href='page2B.html'>Sub Task 2.B</a>
-        //         <a href='page2C.html'>Sub Task 2.C</a>
-        //         <a href='page3A.html'>Sub Task 3.A</a>
-        //         <a href='page3B.html'>Sub Task 3.B</a>
-        //         <a href='page3C.html'>Sub Task 3.C</a>
-        //     </div>
-        // """;
+        // Add the topnav
+        // This uses a Java v15+ Text Block
+        html = html + """
+            <div class='topnav'>
+                <a href='/'>Homepage</a>
+                <a href='mission.html'>Our Mission</a>
+		        <a href="equipment.html">Climate Equipment</a>
+                <a href='page2A.html'>Sub Task 2.A</a>
+                <a href='page2B.html'>Sub Task 2.B</a>
+                <a href='page2C.html'>Sub Task 2.C</a>
+                <a href='page3A.html'>Sub Task 3.A</a>
+                <a href='page3B.html'>Sub Task 3.B</a>
+                <a href='page3C.html'>Sub Task 3.C</a>
+            </div>
+        """;
 
-        // // Add header content block
-        // html = html + """
-        //     <div class='header'>
-        //         <h1>Our Mission</h1>
-        //     </div>
-        // """;
+        // Add header content block
+        html = html + """
+            <div class='header'>
+                <h1>Our Mission</h1>
+            </div>
+        """;
 
-        // // Add Div for page Content
-        // html = html + "<div class='content'>";
+        // Add Div for page Content
+        html = html + "<div class='content'>";
 
-        // // Add HTML for the page content
-        // html = html + """
-        //     <p>Mission page content</p>
-        //     """;
+        // Add HTML for the page content
+        html = html + """
+            <p>Mission page content</p>
+            """;
 
-        // // This example uses JDBC to lookup the FLAGs
-        // JDBCConnection jdbc = new JDBCConnection();
+        // This example uses JDBC to lookup the FLAGs
+        JDBCConnection jdbc = new JDBCConnection();
 
-        // // Next we will ask this *class* for the FLAGs
-        // ArrayList<String> flagNames = getFlags();
+        // Next we will ask this *class* for the FLAGs
+        ArrayList<FLAG> flagNames = jdbc.getFlags();
 
-        // // Add HTML for the FLAGs list
-        // html = html + "<h1>All quality measurement flags in the climate database</h1>" + "<ul>";
+        // Add HTML for the FLAGs list
+        html = html + "<h1>All quality measurement flags in the climate database</h1>" + "<ul>";
 
-        // // Finally we can print out all of the qualtiy falgs
-        // for (String name : flagNames) {
-        //     html = html + "<li>" + name + "</li>";
-        // }
+        // Finally we can print out all of the qualtiy falgs
+        for (FLAG name : flagNames) {
+            html = html + "<li>" + name + "</li>";
+        }
 
-        // // Finish the List HTML
-        // html = html + "</ul>";
+        // Finish the List HTML
+        html = html + "</ul>";
 
 
-        // // Close Content div
-        // html = html + "</div>";
+        // Close Content div
+        html = html + "</div>";
 
-        // // Footer
-        // html = html + """
-        //     <div class='footer'>
-        //         <p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>
-        //     </div>
-        // """;
+        // Footer
+        html = html + """
+            <div class='footer'>
+                <p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>
+            </div>
+        """;
 
-        // // Finish the HTML webpage
-        // html = html + "</body>" + "</html>";
+        // Finish the HTML webpage
+        html = html + "</body>" + "</html>";
         
 
-        // // DO NOT MODIFY THIS
-        // // Makes Javalin render the webpage
-        // context.html(html);
+        // DO NOT MODIFY THIS
+        // Makes Javalin render the webpage
+        context.html(html);
     }
 
 }
