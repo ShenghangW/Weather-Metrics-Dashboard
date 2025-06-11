@@ -21,51 +21,56 @@ body {
 .header h1 {
    font-size: 50px;
 }
-
-.hamburger-icon {
-   top: 1rem;
-   left: 1rem;
-}
-.hamburger-icon img{
-   width: 50px;
-   height: 50px;
-}
-.logo-main{
-   width: 50px;
-   height: 25px;
-}
-.search{
-   display: flex; 
-   flex-direction: row;
-   height: 75%;
-   width: 75%;
-   align-items: center;
+.menu {
+   display: flex;
+   flex-direction: column; gap: 4px;
    justify-content: center;
+   align-items: center;
+}
+.menu-bar {
+   width: 25px;
+   height: 5px;
+   background-color: black;
+
+}
+
+.logo-main{
+   width: 60px;
+   height: 20px;
+}
+.search {
+  display: flex;
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  height: 40px;
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
 }
 .search-bar {
-   width: 50%;
-   height: 50%;
+  flex-grow: 1;
+  border: none;
+  padding: 0 10px;
+  font-size: 16px;
+  height: 100%;
 }
 
 .submit-button {
-   width: 5px;
-   height: 5px;
+  background-color: white;
+  border: none;
+  width: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .submit-button img {
-   width: 5px;
-   height: 5px;
+   height: 20px;
+   width: 20px;
 }
 
-.search left{
-   width: 50%;
-   height: 50%;
-}
-
-.search right{
-   width: 50px;
-   height: 50px;
-}
 /* Make the logo have a rounded edge */
 img.top-image {
    vertical-align: middle;
@@ -74,13 +79,19 @@ img.top-image {
 /* CSS Layout from W3Schools: https://www.w3schools.com/css/css_templates.asp */
 /* Style the top navigation bar */
 .topnav {
-   overflow: hidden;
-   background-color: #333;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   margin: 0;
- }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+}
+
+.topnav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
  /* Style the topnav links */
  .topnav a {
