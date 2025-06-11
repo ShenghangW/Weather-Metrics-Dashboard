@@ -7,11 +7,7 @@
 body {
    font-family: Arial;
    padding: 10px;
-<<<<<<< Updated upstream
    background: #ffffff;
-=======
-   background: #f1f1f1;
->>>>>>> Stashed changes
 }
 
 /* Header (div) formatting */
@@ -26,9 +22,7 @@ body {
    font-size: 50px;
 }
 
-<<<<<<< Updated upstream
 .hamburger-icon {
-   position: fixed;
    top: 1rem;
    left: 1rem;
 }
@@ -40,19 +34,38 @@ body {
    width: 50px;
    height: 25px;
 }
-.search-bar{
-   display: flex;
-   height: 50px;
-   width: 200px;
-   
+.search{
+   display: flex; 
+   flex-direction: row;
+   height: 75%;
+   width: 75%;
+   align-items: center;
+   justify-content: center;
 }
-.search-bar img{
+.search-bar {
+   width: 50%;
+   height: 50%;
+}
+
+.submit-button {
+   width: 5px;
+   height: 5px;
+}
+
+.submit-button img {
+   width: 5px;
+   height: 5px;
+}
+
+.search left{
+   width: 50%;
+   height: 50%;
+}
+
+.search right{
    width: 50px;
    height: 50px;
 }
-=======
-
->>>>>>> Stashed changes
 /* Make the logo have a rounded edge */
 img.top-image {
    vertical-align: middle;
@@ -63,12 +76,12 @@ img.top-image {
 .topnav {
    overflow: hidden;
    background-color: #333;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: 0;
  }
-<<<<<<< Updated upstream
 
-=======
- 
->>>>>>> Stashed changes
  /* Style the topnav links */
  .topnav a {
    float: left;
@@ -93,10 +106,6 @@ img.top-image {
  
  /* Style the footer */
  .footer {
-<<<<<<< Updated upstream
    background-color: #ffffff;
-=======
-   background-color: #cccccc;
->>>>>>> Stashed changes
    padding: 10px;
  }
