@@ -63,8 +63,12 @@ public class PageIndex implements Handler {
                         <button class="submit-button" type="submit">
                             <img src="search.png" alt="Search" />
                         </button>
+                        <button class="filter-button" onclick="openFilter()">Filter</button>
                 </form>
-                <button class="filter-button" onclick="openFilter()">Filter</button>
+                    <div class="topnav-right"> 
+                        <button class="account-button" onclick="openLogin()">Login</button>
+                        <button class="account-button" onclick="openSignup()">Signup</button>
+                    </div>
                 </div>
         """;
 

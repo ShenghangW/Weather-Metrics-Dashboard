@@ -71,6 +71,28 @@ body {
    width: 20px;
 }
 
+.filter-button {
+  height: 40px;
+  width: 40px;
+  padding: 0;
+  border: none;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.account-button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-left: 0.5rem;
+  border: 1px;
+  cursor: pointer;
+}
+
 /* Make the logo have a rounded edge */
 img.top-image {
    vertical-align: middle;
@@ -92,6 +114,13 @@ img.top-image {
   align-items: center;
   gap: 1rem;
 }
+
+.topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 
  /* Style the topnav links */
  .topnav a {
