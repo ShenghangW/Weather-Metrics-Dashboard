@@ -12,14 +12,19 @@ body {
 
 /* Header (div) formatting */
 .header {
-   padding: 10px;
-   text-align: center;
-   background-color: #cccccc;
-   color: #000000;
+  background-image: url(/src/main/resources/images/nijika-globe-bocchi-the-rock.gif);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  height: 400px;
 }
 
 .header h1 {
-   font-size: 50px;
+  font-size: 50px;
+  margin-top: 120px; 
+  color: white; 
+  text-shadow: 2px 2px 4px #000;
+  text-align: center;
 }
 .menu {
    display: flex;
@@ -97,6 +102,7 @@ body {
 img.top-image {
    vertical-align: middle;
 }
+
 
 /* CSS Layout from W3Schools: https://www.w3schools.com/css/css_templates.asp */
 /* Style the top navigation bar */
