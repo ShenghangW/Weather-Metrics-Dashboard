@@ -90,17 +90,6 @@ public class PageIndex implements Handler {
             <p>Homepage content</p>
             """;
 
-        // Get the ArrayList of Strings of all FLAGs
-        ArrayList<String> flagNames = getFlags();
-
-        // Add HTML for the FLAG list
-        html = html + "<h1>All quality measurement flags in the climate database</h1>" + "<ul>";
-
-        // Finally we can print out all of the FLAGs
-        for (String name : flagNames) {
-            html = html + "<li>" + name + "</li>";
-        }
-
         // Finish the List HTML
         html = html + "</ul>";
 
@@ -123,55 +112,4 @@ public class PageIndex implements Handler {
         context.html(html);
     }
 
-    /**
-     * Get the flags and their descriptors from the database.
-     */
-    public ArrayList<String> getFlags() {
-        // Create the ArrayList of FLAG objects to return
-        ArrayList<String> flags = new ArrayList<String>();
-
-        // Setup the variable for the JDBC connection
-        Connection connection = null;
-
-        try {
-            // Connect to JDBC data base
-            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
-
-            // Prepare a new SQL Query & Set a timeout
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);
-
-            // The Query
-            String query = "SELECT * FROM FlagQuality";
-            
-            // Get Result
-            ResultSet results = statement.executeQuery(query);
-
-            // Process all of the results
-            while (results.next()) {
-                String flag  = results.getString("flag");
-
-                // Add the flag object to the array
-                flags.add(flag);
-            }
-            // Close the statement because we are done with it
-            statement.close();
-        } catch (SQLException e) {
-            // If there is an error, lets just pring the error
-            System.err.println(e.getMessage());
-        } finally {
-            // Safety code to cleanup
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
-
-        // Finally we return all of the flags
-        return flags;
-    }
 }
