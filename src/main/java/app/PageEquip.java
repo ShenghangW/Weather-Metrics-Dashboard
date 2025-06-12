@@ -81,8 +81,11 @@ public class PageEquip implements Handler {
         // Add HTML for the FLAGs list
         html = html + "<h1>All quality measurement flags in the climate database</h1>" + "<ul>";
 
+        
+
         // Finally we can print out all of the qualtiy falgs
-        for (FLAG name : flagNames) {
+        for (FLAG flagObj : flagNames) {
+            String name = flagObj.getFlag();
             html = html + "<li>" + name + "</li>";
         }
 
