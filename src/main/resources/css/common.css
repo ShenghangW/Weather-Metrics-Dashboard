@@ -12,7 +12,7 @@ body {
 
 /* Header (div) formatting */
 .header {
-  background-image: url(/src/main/resources/images/nijika-globe-bocchi-the-rock.gif);
+  background-image: url(/src/main/resources/images/earth-image.jpg);
   background-size: cover;
   background-position: center;
   position: relative;
