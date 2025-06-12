@@ -12,14 +12,28 @@ body {
 
 /* Header (div) formatting */
 .header {
-  background-image: url(/src/main/resources/images/earth-image.jpg);
-  background-size: cover;
-  background-position: center;
   position: relative;
+  width: 100%;
   height: 400px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.header h1 {
+.header-bg-image{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.header-overlay {
+  position: relative;
+  z-index: 1;
   font-size: 50px;
   margin-top: 120px; 
   color: white; 
