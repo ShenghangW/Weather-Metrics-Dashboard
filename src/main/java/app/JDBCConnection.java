@@ -131,12 +131,12 @@ public class JDBCConnection {
             stmt.setQueryTimeout(30);
 
             // FIXED TABLE NAME TO MATCH YOUR SCHEMA
-            String query = "SELECT name, student_number, subtask, role FROM TeamMembers";
+            String query = "SELECT name, student_id, subtask, role FROM TeamMembers";
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
                 String name = rs.getString("name");
-                String studentNum = rs.getString("student_number");
+                String studentNum = rs.getString("student_id");
                 String subtask = rs.getString("subtask");
                 String role = rs.getString("role");
 

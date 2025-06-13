@@ -17,7 +17,11 @@ body {
   background-position: center;
   position: relative;
   height: 400px;
+  color: white;
+  text-align: center;
 }
+
+
 
 .header h1 {
   font-size: 50px;
@@ -149,9 +153,12 @@ img.top-image {
    background-color: #ddd;
    padding: 10px;
  }
- 
+
+
  /* Style the footer */
  .footer {
    background-color: #ffffff;
    padding: 10px;
  }
+
+
