@@ -1,15 +1,7 @@
 package app;
 
-import java.util.ArrayList;
-
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Example Index HTML class using Javalin
@@ -44,8 +36,7 @@ public class PageIndex implements Handler {
 
         // Add the topnav
         // This uses a Java v15+ Text Block
-        html = html + """
-        <div class="header">     
+        html = html + """    
         <div class="topnav">
   <div class="topnav-left">
         <a href="#">
@@ -71,9 +62,12 @@ public class PageIndex implements Handler {
                         <button class="account-button" onclick="openSignup()">Signup</button>
                     </div>
                 </div>
-                <h1>HomePage</h1>
+                <div class="header"> 
+                <img class="header-bg-image" src="earth-image.jpeg" draggable = False alt="header photo">
+                    <div class="header-overlay">
+                        <h1>HomePage</h1>
+                    </div>
                 </div>
-
         """;
 
         // Add header content block
