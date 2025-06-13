@@ -63,7 +63,7 @@ public class PageIndex implements Handler {
                     </div>
                 </div>
                 <div class="header"> 
-                <img class="header-bg-image" src="earth-image.jpeg" alt="header photo">
+                <img class="header-bg-image" src="earth-image.jpeg" draggable = False alt="header photo">
                     <div class="header-overlay">
                         <h1>HomePage</h1>
                     </div>
