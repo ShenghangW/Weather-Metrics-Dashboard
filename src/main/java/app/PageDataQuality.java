@@ -63,7 +63,14 @@ public class PageDataQuality implements Handler {
 
         // Add HTML for the page content
         html = html + """
-            <p>Subtask 2.C page content</p>
+                <select name="categories" id="categories">
+                <option value="precipitation">Precipitation</option>
+                <option value="evaporation">Evaporation</option>
+                <option value="temperature">Temperature</option>
+                <option value="humidity">Humidity</option>
+                <option value="sunshine">Sunshine</option>
+                <option value="cloud">Cloud Coverage</option>
+                </select>
             """;
 
         // Close Content div
