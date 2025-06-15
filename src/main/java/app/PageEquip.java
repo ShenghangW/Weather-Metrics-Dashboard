@@ -60,7 +60,7 @@ public class PageEquip implements Handler {
         // Add header content block
         html = html + """
             <div class='header'>
-                <h1>Our Mission</h1>
+                <h1>Data</h1>
             </div>
         """;
 
