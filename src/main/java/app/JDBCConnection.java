@@ -90,7 +90,7 @@ public class JDBCConnection {
         return flags;
     }
 
-    // TODO: Add your required methods here
+    // Add your required methods here
     public ArrayList<Persona> getPersonas() {
     ArrayList<Persona> personas = new ArrayList<>();
     Connection conn = null;

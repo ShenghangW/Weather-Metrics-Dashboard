@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 /**
  * Example Index HTML class using Javalin
  * <p>
@@ -67,14 +61,38 @@ public class PageEquip implements Handler {
         // Uses JDBC to lookup data
         JDBCConnection jdbc = new JDBCConnection();
         ArrayList<METADATA> metadata = jdbc.getMetadata();
+        ArrayList<String> headings = new ArrayList<String>();
+        ArrayList<Integer> indices = new ArrayList<Integer>();
+
+        headings.add("Precipitation");
+        headings.add("Evaporation");
+        headings.add("Temperature");
+        headings.add("Humidity");
+        headings.add("Sunshine");
+        headings.add("Cloud Coverage");
+
+        int precipIndex = 2;
+        int evapIndex = 6;
+        int tempIndex = 9;
+        int humIndex = 15;
+        int sunIndex = 31;
+        int cloudIndex = 33;
+
+        indices.add(precipIndex);
+        indices.add(evapIndex);
+        indices.add(tempIndex);
+        indices.add(humIndex);
+        indices.add(sunIndex);
+        indices.add(cloudIndex);
+        indices.add(metadata.size());
 
         // Add Div for page Content
         html = html + "<div class='content'>";
 
         html += "<h1>Summary of our data</h1>";
-        html +=     "<p>Our data contains weather data from 141 weather stations across 6 Australian states and territories (excluding A.C.T.)" +
-                    "as well as stations in antarctic and extended territories (including Maquarie and Norfolk islands). " +
-                    "We collect 6 categories of environmental weather data:</p>" +
+        html +=     "<p>Our data contains weather data from 141 weather stations across 6 Australian states and territories (excluding A.C.T.) " +
+                    "as well as stations in antarctic and extended territories (including Maquarie and Norfolk islands).</p>" +
+                    "<p>We collect 6 categories of environmental weather data:</p>" +
                     "<ol>" +
                     "<li>Precipitation</li>" +
                     "<li>Evaporation</li>" +
@@ -90,23 +108,26 @@ public class PageEquip implements Handler {
                     "<li>" + metadata.get(0).getField() + ": " + metadata.get(0).getDescription() + "</li>" +
                     "<li>" + metadata.get(1).getField() + ": " + metadata.get(1).getDescription() + "</li>" +
                     "</ul>" +
-                    "<p>Each category of data contains various related measurements, which is described in detail in the following table.</p>";
+                    "<p>Each category of data contains various related measurements, which is described in detail in the following tables:</p>";
+        
+        for (int i = 0 ; i < headings.size() ; ++i){
+            html += "<h2>" + headings.get(i) + "</h2>" +
+                    "<table>" +
+                    "<tr>" +
+                    "<th>Data Name</th>" +
+                    "<th>Description</th>" +
+                    "</tr>";
 
-        // Next we will ask this *class* for the FLAGs
-        ArrayList<FLAG> flagNames = jdbc.getFlags();
+            for(int j = indices.get(i) ; j < indices.get(i+1) ; ++j){
+                html += "<tr><td>" +
+                        metadata.get(j).getField() +
+                        "</td><td>" +
+                        metadata.get(j).getDescription() +
+                        "</td></tr>";
+            }
 
-        // Add HTML for the FLAGs list
-        html = html + "<h1>All quality measurement flags in the climate database</h1>" + "<ul>";
-
-        // Finally we can print out all of the qualtiy falgs
-        for (FLAG flagObj : flagNames) {
-            String name = flagObj.getFlag();
-            html = html + "<li>" + name + "</li>";
+            html += "</table>";
         }
-
-        // Finish the List HTML
-        html = html + "</ul>";
-
 
         // Close Content div
         html = html + "</div>";
