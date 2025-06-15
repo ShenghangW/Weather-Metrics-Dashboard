@@ -47,7 +47,7 @@ public class PageEquip implements Handler {
             <div class='topnav'>
                 <a href='/'>Homepage</a>
                 <a href='mission.html'>Our Mission</a>
-		        <a href="equipment.html">Climate Equipment</a>
+		        <a href="equipment.html">Our Data</a>
                 <a href='page2A.html'>Sub Task 2.A</a>
                 <a href='page2B.html'>Sub Task 2.B</a>
                 <a href='page2C.html'>Sub Task 2.C</a>
@@ -64,16 +64,33 @@ public class PageEquip implements Handler {
             </div>
         """;
 
+        // Uses JDBC to lookup data
+        JDBCConnection jdbc = new JDBCConnection();
+        ArrayList<METADATA> metadata = jdbc.getMetadata();
+
         // Add Div for page Content
         html = html + "<div class='content'>";
 
-        // Add HTML for the page content
-        html = html + """
-            <p>Mission page content</p>
-            """;
-
-        // This example uses JDBC to lookup the FLAGs
-        JDBCConnection jdbc = new JDBCConnection();
+        html += "<h1>Summary of our data</h1>";
+        html +=     "<p>Our data contains weather data from 141 weather stations across 6 Australian states and territories (excluding A.C.T.)" +
+                    "as well as stations in antarctic and extended territories (including Maquarie and Norfolk islands). " +
+                    "We collect 6 categories of environmental weather data:</p>" +
+                    "<ol>" +
+                    "<li>Precipitation</li>" +
+                    "<li>Evaporation</li>" +
+                    "<li>Temperature</li>" +
+                    "<li>Humidity</li>" +
+                    "<li>Sunshine</li>" +
+                    "<li>Cloud Coverage</li>" +
+                    "</ol>" +
+                    "<p>Every data point contains 3 pieces of identifying information:</p>" +
+                    "<ul>" +
+                    "<li>MeasurementId: A unique ID number for every data point in our dataset, in the format XYYYYYYY where X represents the " +
+                    "category it belongs to according to the list above, and Y represents the unique ID for each category.</li>" +
+                    "<li>" + metadata.get(0).getField() + ": " + metadata.get(0).getDescription() + "</li>" +
+                    "<li>" + metadata.get(1).getField() + ": " + metadata.get(1).getDescription() + "</li>" +
+                    "</ul>" +
+                    "<p>Each category of data contains various related measurements, which is described in detail in the following table.</p>";
 
         // Next we will ask this *class* for the FLAGs
         ArrayList<FLAG> flagNames = jdbc.getFlags();
