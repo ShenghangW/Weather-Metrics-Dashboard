@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 /**
  * Example Index HTML class using Javalin
  * <p>
@@ -20,10 +14,10 @@ import java.sql.Statement;
  * @author Timothy Wiley, 2023. email: timothy.wiley@rmit.edu.au
  * @author Santha Sumanasekara, 2021. email: santha.sumanasekara@rmit.edu.au
  */
-public class PageST2C implements Handler {
+public class PageDataQuality implements Handler {
 
     // URL of this page relative to http://localhost:7001/
-    public static final String URL = "/page2C.html";
+    public static final String URL = "/dataquality.html";
 
     @Override
     public void handle(Context context) throws Exception {
@@ -32,7 +26,7 @@ public class PageST2C implements Handler {
 
         // Add some Head information
         html = html + "<head>" + 
-               "<title>Subtask 2.3</title>";
+               "<title>Data Quality</title>";
 
         // Add some CSS (external file)
         html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
@@ -50,7 +44,7 @@ public class PageST2C implements Handler {
 		        <a href="equipment.html">Climate Equipment</a>
                 <a href='page2A.html'>Sub Task 2.A</a>
                 <a href='page2B.html'>Sub Task 2.B</a>
-                <a href='page2C.html'>Sub Task 2.C</a>
+                <a href='dataquality.html'>Data Quality</a>
                 <a href='page3A.html'>Sub Task 3.A</a>
                 <a href='page3B.html'>Sub Task 3.B</a>
                 <a href='page3C.html'>Sub Task 3.C</a>
@@ -59,8 +53,8 @@ public class PageST2C implements Handler {
 
         // Add header content block
         html = html + """
-            <div class='header'>
-                <h1>Subtask 2.C</h1>
+            <div class='qualityheader'>
+                <h1>Data Quality</h1>
             </div>
         """;
 

@@ -48,7 +48,7 @@ public class PageIndex implements Handler {
         </a>           
         <a href='/'><img class="logo-main" src="logo.png" /></a>
             <a href='mission.html'>Our Mission</a>
-            <a href='equipment.html'>Our Data</a>
+            <a href='data.html'>Our Data</a>
              </div>
                  <form class="search" action="/search" method="get">
                     <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
