@@ -155,4 +155,97 @@ public class JDBCConnection {
         }
         return teamMembers;
     }
+
+   public String getYearRange() {
+    String yearRange = "Unknown";
+    Connection conn = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        Statement stmt = conn.createStatement();
+        stmt.setQueryTimeout(30);
+
+        String query = "SELECT count(*) FROM FlagQuality;";
+        ResultSet rs = stmt.executeQuery(query);
+
+        if (rs.next()) {
+            int minYear = rs.getInt("minYear");
+            int maxYear = rs.getInt("maxYear");
+            yearRange = minYear + " - " + maxYear;
+        }
+
+        stmt.close();
+    } catch (SQLException e) {
+        System.err.println("getYearRange Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return yearRange;
+    }
+
+    public String getColdestStationName() {
+    String station = "Unknown";
+    Connection conn = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        Statement stmt = conn.createStatement();
+        stmt.setQueryTimeout(30);
+
+        String query = """
+        SELECT count(*) FROM FlagQuality;;
+        """;
+
+        ResultSet rs = stmt.executeQuery(query);
+        if (rs.next()) {
+            station = rs.getString("Name");
+        }
+
+        stmt.close();
+    } catch (SQLException e) {
+        System.err.println("getColdestStationName Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return station;
+    }
+
+    public String getMostRainfallStationName() {
+    String station = "Unknown";
+    Connection conn = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        Statement stmt = conn.createStatement();
+        stmt.setQueryTimeout(30);
+
+        String query = """
+            SELECT count(*) FROM FlagQuality;
+        """;
+
+        ResultSet rs = stmt.executeQuery(query);
+        if (rs.next()) {
+            station = rs.getString("Name");
+        }
+
+        stmt.close();
+    } catch (SQLException e) {
+        System.err.println("getMostRainfallStationName Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return station;
+    }
 }

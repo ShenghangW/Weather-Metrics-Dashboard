@@ -31,6 +31,8 @@ public class PageIndex implements Handler {
         html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
         html = html + "</head>";
 
+        JDBCConnection jdbc = new JDBCConnection();
+        
         // Add the body
         html = html + "<body>";
 
@@ -62,28 +64,38 @@ public class PageIndex implements Handler {
                         <button class="account-button" onclick="openSignup()">Signup</button>
                     </div>
                 </div>
-                <div class="header"> 
-                <img class="header-bg-image" src="earth-image.jpeg" draggable = False alt="header photo">
-                    <div class="header-overlay">
-                        <h1>HomePage</h1>
-                    </div>
-                </div>
         """;
 
         // Add header content block
-        
+         html = html +  """
+            <div class='header'>
+             <img src='earth-image.jpeg' alt='Weather Background' class='header-bg-image'  draggable =false/>
+            <div class='header-overlay'>
+             Welcome to AusClimateView
+            </div>
+            </div>
+            """;
 
         // Add Div for page Content
         html = html + "<div class='content'>";
 
         // Add HTML for the page content
-        html = html + """
-            <p>Homepage content</p>
-            """;
+        html += "<div class='slide-show'>" +
+        "<div class='slides'>" +
 
-        // Finish the List HTML
-        html = html + "</ul>";
+        "<div class='slide'><div class='slide-content'>" +
+        "<h2>Year Range</h2><p>" + jdbc.getYearRange() + "</p>" +
+        "</div></div>" +
 
+        "<div class='slide'><div class='slide-content'>" +
+        "<h2>Lowest Recorded Temperature Station</h2><p>" + jdbc.getColdestStationName() + "</p>" +
+        "</div></div>" +
+
+        "<div class='slide'><div class='slide-content'>" +
+        "<h2>Highest Recorded Rainfall Station</h2><p>" + jdbc.getMostRainfallStationName() + "</p>" +
+        "</div></div>" +
+
+        "</div></div>";
         // Close Content div
         html = html + "</div>";
 
