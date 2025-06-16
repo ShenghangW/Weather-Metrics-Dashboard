@@ -272,3 +272,97 @@ body {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+/* page reference  */
+.pageRef a{
+  text-indent: 2em;
+  font-size: 14px;
+  color: #444;
+  font-weight: 400px;
+  font-style: normal;
+  text-decoration: none;
+}
+
+.pageRef a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.missionHeader {
+  background-image: url('running water.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  color: white; 
+  text-shadow: 2px 2px 4px #000;
+  text-align: center;
+}
+
+/* Personas container */
+.personas-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px; /* Increased gap for better spacing */
+    margin: 40px auto; /* Centered with auto margins */
+    max-width: 1900px; /* Wider container for larger images */
+    width: 95%; /* Relative width */
+}
+
+/* Persona box - now with fixed width */
+.persona-box {
+    width: 575px; /* Fixed width as requested */
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+/* Persona image container */
+.persona-image {
+    width: 100%;
+    height: 325px; /* Increased height for better proportions */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Individual persona images */
+.persona-1 .persona-image {
+    background-image: url('Andrew.png');
+    border: 4px solid #4e89ae;
+}
+
+.persona-2 .persona-image {
+    background-image: url('Julia.png');
+    border: 4px solid #ed6663;
+}
+
+.persona-3 .persona-image {
+    background-image: url('Maria.png');
+    border: 4px solid #ffa372;
+}
+
+/* Persona text styling */
+.persona-box h3 {
+    color: #2c3e50;
+    font-size: 1.5em; /* Slightly larger font */
+    margin: 15px 0;
+    text-align: center;
+}
+
+.persona-box p {
+    color: #34495e;
+    line-height: 1.7;
+    font-size: 1.1em; /* Slightly larger font */
+    text-align: center; /* Center align text */
+    padding: 0 10px; /* Add some padding */
+}

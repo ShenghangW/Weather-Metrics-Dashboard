@@ -11,27 +11,17 @@ public class PageMission implements Handler {
     @Override
     public void handle(Context context) throws Exception {
         String html = "<html><head><title>Our Mission</title>"
-                + "<link rel='stylesheet' type='text/css' href='missionPage.css' />"
+                + "<link rel='stylesheet' type='text/css' href='common.css' />"
                 + "</head><body>"
 
-                + "<div class='topnav'>"
-                    + "<a href='/'>Homepage</a>"
-                    + "<a href='mission.html'>Our Mission</a>"
-                    + "<a href='data.html'>Our Data</a>"
-                    + "<a href='SearchResults.html'>Sub Task 2.A</a>"
-                    + "<a href='page2B.html'>Sub Task 2.B</a>"
-                    + "<a href='dataquality.html'>Data Quality</a>"
-                    + "<a href='page3A.html'>Sub Task 3.A</a>"
-                    + "<a href='page3B.html'>Sub Task 3.B</a>"
-                    + "<a href='page3C.html'>Sub Task 3.C</a>"
-                + "</div>"
+                + PageIndex.navbar
                 
                 + "<br>"
                 + "<div class='pageRef'>"
                     + "<a href='/'>Home/</a>"
                     + "<a href='mission.html'>About us</a>"
                 + "</div>"
-                
+                    
                 + "<div><h1 class='missionHeader'>About us</h1></div>"
                 + "<div class>"
                 
@@ -50,17 +40,42 @@ public class PageMission implements Handler {
                 + "<li><strong>Track Trends</strong>: Visualize changes over time with our graphing tools.</li>"
                 + "</ul>";
 
-        // FIXED TYPO IN CLASS NAME
+        // FIXED TYPO IN CLASS NAME 
         JDBCConnection jdbc = new JDBCConnection();
         ArrayList<Persona> personas = jdbc.getPersonas();
 
         html += "<br><br>";
-        html += "<h2 class='head1'>Target Personas</h2><ul>";
-        for (Persona persona : personas) {
-            html += "<li><strong>" + persona.getName() + "</strong>: "
-                + persona.getDescription() + "</li>";
+        html += "<h2 class='head1'>Target Personas</h2>";
+        html += "<div class='personas-container'>"; // Main container
+
+        // Left persona container
+        if(personas.size() > 0) {
+            html += "<div class='persona-box persona-1'>";
+            html += "<div class='persona-image'></div>";
+            html += "<h3>" + personas.get(0).getName() + "</h3>";
+            html += "<p>" + personas.get(0).getDescription() + "</p>";
+            html += "</div>";
         }
-        html += "</ul>";
+
+        // Persona 2 (Middle)
+        if(personas.size() > 1) {
+            html += "<div class='persona-box persona-2'>";
+            html += "<div class='persona-image'></div>";
+            html += "<h3>" + personas.get(1).getName() + "</h3>";
+            html += "<p>" + personas.get(1).getDescription() + "</p>";
+            html += "</div>";
+        }
+
+        // Persona 3 (Right)
+        if(personas.size() > 2) {
+            html += "<div class='persona-box persona-3'>";
+            html += "<div class='persona-image'></div>";
+            html += "<h3>" + personas.get(2).getName() + "</h3>";
+            html += "<p>" + personas.get(2).getDescription() + "</p>";
+            html += "</div>";
+        }
+
+        html += "</div>"; // Close personas-container
 
         ArrayList<TeamMember> teamMembers = jdbc.getTeamMembers();
 
