@@ -36,20 +36,7 @@ public class PageDataQuality implements Handler {
         html = html + "<body>";
 
         // Add the topnav
-        // This uses a Java v15+ Text Block
-        html = html + """
-                     <div class='topnav'>
-                        <a href='/'>Homepage</a>
-                        <a href='mission.html'>Our Mission</a>
-                  <a href="equipment.html">Climate Equipment</a>
-                        <a href='page2A.html'>Sub Task 2.A</a>
-                        <a href='page2B.html'>Sub Task 2.B</a>
-                        <a href='dataquality.html'>Data Quality</a>
-                        <a href='page3A.html'>Sub Task 3.A</a>
-                        <a href='page3B.html'>Sub Task 3.B</a>
-                        <a href='page3C.html'>Sub Task 3.C</a>
-                    </div>
-                """;
+        html = html + PageIndex.navbar;
 
         // Add header content block
         html = html + """
@@ -99,8 +86,8 @@ public class PageDataQuality implements Handler {
                         metric.innerHTML = ''; // Clear previous options
 
                         const options = {
-                            hum: ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm'],
-                            cloud: ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm']
+                            hum: ['12am', '03am', '06am', '09am', '12pm', '03pm', '06pm', '09pm'],
+                            cloud: ['12am', '03am', '06am', '09am', '12pm', '03pm', '06pm', '09pm']
                         };
 
                         if (category && options[category]) {
@@ -131,7 +118,7 @@ public class PageDataQuality implements Handler {
                         String flagName = flagsObj.getFlag();
 
                         if (flagName.charAt(0) != 'Y') {
-                            html += "<option value='" + flagName.toLowerCase() + "'>" + flagName + "</option>";
+                            html += "<option value='" + flagName + "'>" + flagName + "</option>";
                         }
                     }
 
@@ -151,12 +138,12 @@ public class PageDataQuality implements Handler {
                         <div id='metric-container' style='display:none; margin-top:10px;'>
                         <label for='metric'>Select time of day:</label>
                         <select name='metric' id='metric'></select>
-                        </div><br></br>
+                        </div><br>
                         <label for="startDate">Please enter start date:</label>
-                        <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br></br>
+                        <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
                         <label for="endDate">Please enter end date:</label>
                         <input type="date" id="endDate" name="endDate" placeholder="dd/mm/yyyy" required></input>
-                        <br></br><button type='submit'>Submit</button>
+                        <br><button type='submit'>Submit</button>
                         </form>
                     """;
         } else if (context.method().equals("POST")) {
@@ -164,9 +151,10 @@ public class PageDataQuality implements Handler {
             String selectedMetric = context.formParam("metric");
             String selectedStartDate = context.formParam("startDate");
             String selectedEndDate = context.formParam("endDate");
+            String selectedFlag = context.formParam("flag");
 
             html += "<p>You selected dataset: <strong>" + selectedCategory + selectedMetric + 
-                    selectedStartDate + selectedEndDate +
+                    selectedStartDate + selectedEndDate + selectedFlag +
                     "</strong></p>" +
                     "<a href='/dataquality.html'>Back</a>";
         }
