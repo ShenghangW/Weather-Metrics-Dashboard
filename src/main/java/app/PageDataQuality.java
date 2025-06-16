@@ -25,8 +25,8 @@ public class PageDataQuality implements Handler {
         String html = "<html>";
 
         // Add some Head information
-        html = html + "<head>" + 
-               "<title>Data Quality</title>";
+        html = html + "<head>" +
+                "<title>Data Quality</title>";
 
         // Add some CSS (external file)
         html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
@@ -38,54 +38,62 @@ public class PageDataQuality implements Handler {
         // Add the topnav
         // This uses a Java v15+ Text Block
         html = html + """
-             <div class='topnav'>
-                <a href='/'>Homepage</a>
-                <a href='mission.html'>Our Mission</a>
-		        <a href="equipment.html">Climate Equipment</a>
-                <a href='page2A.html'>Sub Task 2.A</a>
-                <a href='page2B.html'>Sub Task 2.B</a>
-                <a href='dataquality.html'>Data Quality</a>
-                <a href='page3A.html'>Sub Task 3.A</a>
-                <a href='page3B.html'>Sub Task 3.B</a>
-                <a href='page3C.html'>Sub Task 3.C</a>
-            </div>
-        """;
+                     <div class='topnav'>
+                        <a href='/'>Homepage</a>
+                        <a href='mission.html'>Our Mission</a>
+                  <a href="equipment.html">Climate Equipment</a>
+                        <a href='page2A.html'>Sub Task 2.A</a>
+                        <a href='page2B.html'>Sub Task 2.B</a>
+                        <a href='dataquality.html'>Data Quality</a>
+                        <a href='page3A.html'>Sub Task 3.A</a>
+                        <a href='page3B.html'>Sub Task 3.B</a>
+                        <a href='page3C.html'>Sub Task 3.C</a>
+                    </div>
+                """;
 
         // Add header content block
         html = html + """
-            <div class='qualityheader'>
-                <h1>Data Quality</h1>
-            </div>
-        """;
+                    <div class='qualityheader'>
+                        <h1>Data Quality</h1>
+                    </div>
+                """;
 
         // Add Div for page Content
         html = html + "<div class='content'>";
 
-        // Add HTML for the page content
-        html = html + """
-                <select name="categories" id="categories">
-                <option value="precipitation">Precipitation</option>
-                <option value="evaporation">Evaporation</option>
-                <option value="temperature">Temperature</option>
-                <option value="humidity">Humidity</option>
-                <option value="sunshine">Sunshine</option>
-                <option value="cloud">Cloud Coverage</option>
-                </select>
-            """;
+        if (context.method().equals("GET")) {
+            // Add HTML for the page content
+            html += """
+                        <form action='/dataquality.html' method='post'>
+                        <select name="categories" id="categories">
+                        <option value="precipitation">Precipitation</option>
+                        <option value="evaporation">Evaporation</option>
+                        <option value="temperature">Temperature</option>
+                        <option value="humidity">Humidity</option>
+                        <option value="sunshine">Sunshine</option>
+                        <option value="cloud">Cloud Coverage</option>
+                        </select>
+                        <button type='submit'>Submit</button>
+                        </form>
+                    """;
+        } else if (context.method().equals("POST")) {
+            String selectedQuality = context.formParam("quality");
 
+            html += "<p>You selected quality level: <strong>" + selectedQuality + "</strong></p>" +
+                    "<a href='/dataquality.html'>Back</a>";
+        }
         // Close Content div
         html = html + "</div>";
 
         // Footer
         html = html + """
-            <div class='footer'>
-                <p>COSC2803 - Studio Project Starter Code (ACC Apr2025)</p>
-            </div>
-        """;
+                    <div class='footer'>
+                        <p>COSC2803 - Studio Project Starter Code (ACC Apr2025)</p>
+                    </div>
+                """;
 
         // Finish the HTML webpage
         html = html + "</body>" + "</html>";
-        
 
         // DO NOT MODIFY THIS
         // Makes Javalin render the webpage
