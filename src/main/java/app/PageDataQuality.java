@@ -62,6 +62,36 @@ public class PageDataQuality implements Handler {
         html = html + "<div class='content'>";
 
         html += """
+                <h1>Assessing quality of data</h1>
+                <p>Not all data is equal. Weather stations will do their best to ensure the validity and accuracy 
+                of all data they collect, but given the sheer amount of data, realistically there will be poor 
+                quality data. We manage this by assessing the value of each data point, as well as the measurement 
+                conditions, to classify all data with a quality flag.</p>
+                <p>Each quality flag is listed below:</p>
+                """;
+
+        JDBCConnection jdbc = new JDBCConnection();
+        ArrayList<FLAG> flags = jdbc.getFlags();
+
+        html += """
+                <table class='descTables'>
+                <tr>
+                <th>Flag</th>
+                <th>Description</th>
+                </tr>
+                """;
+
+        for (FLAG flagsObj : flags) {
+            String flagName = flagsObj.getFlag();
+            String flagDesc = flagsObj.getDescription();
+
+            html += "<tr class='descTables'><td class='descTables'>" + flagName +
+                    "</td><td class='descTables'>" + flagDesc + "</td></tr>";
+        }
+
+        html += "</table>";
+
+        html += """
                 <script>
                     function updateOptions() {
                         const category = document.getElementById('category').value;
@@ -90,9 +120,25 @@ public class PageDataQuality implements Handler {
         if (context.method().equals("GET")) {
             // Add HTML for the page content
             html += """
+                        <p>To take a closer look at the poor quality data, please select the following options:</p>
                         <form action="/dataquality.html" method="post">
+                        <label for="flag"></label>
+                        <select name="flag" id="flag" required>
+                        <option value="" disabled selected>Select quality flag</option>
+                    """;
+
+                    for (FLAG flagsObj : flags) {
+                        String flagName = flagsObj.getFlag();
+
+                        if (flagName.charAt(0) != 'Y') {
+                            html += "<option value='" + flagName.toLowerCase() + "'>" + flagName + "</option>";
+                        }
+                    }
+
+            html += """
+                        </select>
                         <label for="category"></label>
-                        <select name="category" id="category" onchange="updateOptions()">
+                        <select name="category" id="category" onchange="updateOptions()" required>
                         <option value="" disabled selected>Select dataset</option>
                         <option value="precip">Precipitation</option>
                         <option value="evap">Evaporation</option>
@@ -105,15 +151,23 @@ public class PageDataQuality implements Handler {
                         <div id='metric-container' style='display:none; margin-top:10px;'>
                         <label for='metric'>Select time of day:</label>
                         <select name='metric' id='metric'></select>
-                        </div>
+                        </div><br></br>
+                        <label for="startDate">Please enter start date:</label>
+                        <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br></br>
+                        <label for="endDate">Please enter end date:</label>
+                        <input type="date" id="endDate" name="endDate" placeholder="dd/mm/yyyy" required></input>
                         <br></br><button type='submit'>Submit</button>
                         </form>
                     """;
         } else if (context.method().equals("POST")) {
             String selectedCategory = context.formParam("category");
             String selectedMetric = context.formParam("metric");
+            String selectedStartDate = context.formParam("startDate");
+            String selectedEndDate = context.formParam("endDate");
 
-            html += "<p>You selected dataset: <strong>" + selectedCategory + selectedMetric + "</strong></p>" +
+            html += "<p>You selected dataset: <strong>" + selectedCategory + selectedMetric + 
+                    selectedStartDate + selectedEndDate +
+                    "</strong></p>" +
                     "<a href='/dataquality.html'>Back</a>";
         }
         // Close Content div
