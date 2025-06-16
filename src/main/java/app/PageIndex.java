@@ -18,27 +18,7 @@ public class PageIndex implements Handler {
     // URL of this page relative to http://localhost:7001/
     public static final String URL = "/";
 
-    @Override
-    public void handle(Context context) throws Exception {
-        // Create a simple HTML webpage in a String
-        String html = "<html>";
-
-        // Add some Header information
-        html = html + "<head>" + 
-               "<title>Homepage</title>";
-
-        // Add some CSS (external file)
-        html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
-        html = html + "</head>";
-
-        JDBCConnection jdbc = new JDBCConnection();
-        
-        // Add the body
-        html = html + "<body>";
-
-        // Add the topnav
-        // This uses a Java v15+ Text Block
-        html = html + """    
+    public static String navbar = """    
         <div class="topnav">
   <div class="topnav-left">
         <a href="#">
@@ -65,6 +45,27 @@ public class PageIndex implements Handler {
                     </div>
                 </div>
         """;
+    @Override
+    public void handle(Context context) throws Exception {
+        // Create a simple HTML webpage in a String
+        String html = "<html>";
+
+        // Add some Header information
+        html = html + "<head>" + 
+               "<title>Homepage</title>";
+
+        // Add some CSS (external file)
+        html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
+        html = html + "</head>";
+
+        JDBCConnection jdbc = new JDBCConnection();
+        
+        // Add the body
+        html = html + "<body>";
+
+        // Add the topnav
+        // This uses a Java v15+ Text Block
+        html = html + navbar;
 
         // Add header content block
          html = html +  """

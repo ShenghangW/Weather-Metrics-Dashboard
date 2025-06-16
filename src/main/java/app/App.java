@@ -41,7 +41,7 @@ public class App {
         app.get(PageIndex.URL, new PageIndex());
         app.get(PageMission.URL, new PageMission());
         app.get(PageData.URL, new PageData());
-        app.get(PageST2A.URL, new PageST2A());
+        app.get(PageSearchResults.URL, new PageSearchResults());
         app.get(PageST2B.URL, new PageST2B());
         app.get(PageDataQuality.URL, new PageDataQuality());
         app.get(PageST3A.URL, new PageST3A());
@@ -51,7 +51,7 @@ public class App {
         // Add / uncomment POST commands for any pages that need web form POSTS
         app.post(PageIndex.URL, new PageIndex());
         app.post(PageMission.URL, new PageMission());
-        app.post(PageST2A.URL, new PageST2A());
+        app.post(PageSearchResults.URL, new PageSearchResults());
         app.post(PageST2B.URL, new PageST2B());
         app.post(PageDataQuality.URL, new PageDataQuality());
         app.post(PageST3A.URL, new PageST3A());
