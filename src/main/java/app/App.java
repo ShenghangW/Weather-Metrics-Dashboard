@@ -42,6 +42,7 @@ public class App {
         app.get(PageMission.URL, new PageMission());
         app.get(PageData.URL, new PageData());
         app.get(PageSearchResults.URL, new PageSearchResults());
+        app.get(PageSearchMetrics.URL, new PageSearchMetrics());
         app.get(PageST2B.URL, new PageST2B());
         app.get(PageDataQuality.URL, new PageDataQuality());
         app.get(PageST3A.URL, new PageST3A());
