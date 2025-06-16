@@ -86,8 +86,8 @@ public class PageDataQuality implements Handler {
                         metric.innerHTML = ''; // Clear previous options
 
                         const options = {
-                            hum: ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm'],
-                            cloud: ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm']
+                            hum: ['12am', '03am', '06am', '09am', '12pm', '03pm', '06pm', '09pm'],
+                            cloud: ['12am', '03am', '06am', '09am', '12pm', '03pm', '06pm', '09pm']
                         };
 
                         if (category && options[category]) {
@@ -118,7 +118,7 @@ public class PageDataQuality implements Handler {
                         String flagName = flagsObj.getFlag();
 
                         if (flagName.charAt(0) != 'Y') {
-                            html += "<option value='" + flagName.toLowerCase() + "'>" + flagName + "</option>";
+                            html += "<option value='" + flagName + "'>" + flagName + "</option>";
                         }
                     }
 
@@ -151,9 +151,10 @@ public class PageDataQuality implements Handler {
             String selectedMetric = context.formParam("metric");
             String selectedStartDate = context.formParam("startDate");
             String selectedEndDate = context.formParam("endDate");
+            String selectedFlag = context.formParam("flag");
 
             html += "<p>You selected dataset: <strong>" + selectedCategory + selectedMetric + 
-                    selectedStartDate + selectedEndDate +
+                    selectedStartDate + selectedEndDate + selectedFlag +
                     "</strong></p>" +
                     "<a href='/dataquality.html'>Back</a>";
         }
