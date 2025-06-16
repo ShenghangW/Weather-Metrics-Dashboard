@@ -13,15 +13,15 @@ public class QUALITY {
         this.metricValue = metricValue;
     }
 
-    public String getField() {
+    public String getLocation() {
         return location;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public String getdate() {
+    public String getDate() {
         return date;
     }
 

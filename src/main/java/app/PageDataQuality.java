@@ -175,11 +175,49 @@ public class PageDataQuality implements Handler {
             String selectedStartDate = context.formParam("startDate");
             String selectedEndDate = context.formParam("endDate");
             String selectedFlag = context.formParam("flag");
+            String metricName = selectedMetric;
 
-            html += "<p>You selected dataset: <strong>" + selectedMetric + selectedTime +
-                    selectedStartDate + selectedEndDate + selectedFlag +
-                    "</strong></p>" +
-                    "<a href='/dataquality.html'>Back</a>";
+            ArrayList<QUALITY> qualityList = getQuality(selectedMetric, selectedTime, selectedStartDate, selectedEndDate, selectedFlag);
+
+            if (! qualityList.get(0).getName().equals("0")) {
+                if (selectedMetric.equals("humid")) {
+                metricName = "Humidity";
+                } else if (selectedMetric.equals("okta")) {
+                metricName = "Cloud Coverage";
+                } else {
+                String first = String.valueOf(metricName.charAt(0));
+                metricName = metricName.replaceFirst(first,first.toUpperCase());
+                }
+                html += """
+                        <table class='descTables'><tr class='descTables'>
+                        <th class='descTables'>LocationID</th>
+                        <th class='descTables'>Site Name</th>
+                        <th class='descTables'>Date</th>
+                        <th class='descTables'>
+                        """ + metricName +
+                        """
+                        </th></tr>         
+                        """;
+
+                for (QUALITY qualityObj : qualityList) {
+                    String location = qualityObj.getLocation();
+                    String name = qualityObj.getName();
+                    String date = qualityObj.getDate();
+                    String value = qualityObj.getMetricValue();
+
+                    html += "<tr class='descTables'><td class='descTables'>" + location +
+                            "</td><td class='descTables'>" + name +
+                            "</td><td class='descTables'>" + date +
+                            "</td><td class='descTables'>" + value +
+                            "</td></tr>";
+                            
+                }
+                html += "</table>";
+            } else {
+                html += "<p>No results</p>";
+            }
+
+            html += "<a href='/dataquality.html'>Back</a>";
         }
         // Close Content div
         html = html + "</div>";
@@ -199,11 +237,21 @@ public class PageDataQuality implements Handler {
         context.html(html);
     }
 
-    public ArrayList<QUALITY> getQuality(String metric,String time,String startDate,String endDate,String flag) {
+    public ArrayList<QUALITY> getQuality(String metric, String time, String startDate, String endDate, String flag) {
         // Create the ArrayList of FlagQuality objects to return
         // Create an array called flags
         ArrayList<QUALITY> quality = new ArrayList<QUALITY>();
-        String metricTime = metric + time;
+        String metricTime = metric;
+        String metricTable = metric;
+
+        if (metric.equals("humid") || metric.equals("okta")) {
+            metricTime += time;
+            if (metric.equals("humid")) {
+                metricTable = "humidity";
+            } else if (metric.equals("okta")) {
+                metricTable = "cloud";
+            }
+        }
 
         // Setup the variable for the JDBC connection
         Connection connection = null;
@@ -219,21 +267,10 @@ public class PageDataQuality implements Handler {
 
             // The SQL Query to be executed
             String query = "select location Location, name Name, YMD Date, " + metricTime +
-                    " metricValue, " + metricTime + "qual metricQuality from " + metric +
-                    "join location on " + metric + ".Location = location.site" +
-                    "where QualityFlag = '" + flag + "' and ";
-            query += """
-                    (Date between "
-                    """ + startDate +
-                    
-                    """
-                    " and "
-                    """ +
-                    endDate +
-                    """
-                    ")
-                    order by Location asc, Date asc limit 50"
-                    """;
+                    " metricValue, " + metricTime + "qual metricQuality from " + metricTable +
+                    " join location on " + metricTable + ".Location = location.site" +
+                    " where metricQuality = '" + flag + "' and (Date between '"+ startDate +
+                    "' and '" + endDate + "') order by Location asc, Date asc limit 50";
             // Put the SQL results into a result set
             ResultSet results = statement.executeQuery(query);
 
@@ -257,6 +294,10 @@ public class PageDataQuality implements Handler {
         } catch (SQLException e) {
             // If there is an error, lets just pring the error
             System.err.println(e.getMessage());
+            QUALITY qualityObj = new QUALITY("0","0","0","0");
+
+            // Add the FLAG object to the flags array
+            quality.add(qualityObj);
         } finally {
             // Safety code to cleanup
             try {
