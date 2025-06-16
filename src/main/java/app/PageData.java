@@ -61,6 +61,7 @@ public class PageData implements Handler {
         // Uses JDBC to lookup data
         JDBCConnection jdbc = new JDBCConnection();
         ArrayList<METADATA> metadata = jdbc.getMetadata();
+        
         ArrayList<String> headings = new ArrayList<String>();
         ArrayList<Integer> indices = new ArrayList<Integer>();
 
