@@ -27,20 +27,20 @@ public class PageIndex implements Handler {
         <div class = "menu-bar"></div>
         <div class = "menu-bar"></div>
         </div>
-        </a>           
+        </a>
         <a href='/'><img class="logo-main" src="logo.png" /></a>
             <div class='dropdown'>
             <span><a href='mission.html'>Our Mission</a></span>
             <div class='dropdown-content'>
-            <a href='SearchMetrics.html'>Metric Explorer</a>
+            <a href='searchMetric.html'>Metric Explorer</a>
             </div></div>
             <div class='dropdown'>
             <span><a href='data.html'>Our Data</a></span>
             <div class='dropdown-content'>
             <a href='dataquality.html'>Data Quality</a>
             </div></div>
-             </div>
-                 <form class="search" action="/search" method="get">
+            </div>
+                <form class="search" action="/search" method="get">
                     <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
                         <button class="submit-button" type="submit">
                             <img src="search.png" alt="Search" />
@@ -80,7 +80,7 @@ public class PageIndex implements Handler {
             <div class='header'>
             <img src='earth-image.jpeg' alt='Weather Background' class='header-bg-image'  draggable =false/>
             <div class='header-overlay'>
-             Welcome to AusClimateView
+            Welcome to AusClimateView
             </div>
             </div>
             """;
