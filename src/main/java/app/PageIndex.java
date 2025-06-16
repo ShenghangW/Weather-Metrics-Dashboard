@@ -18,25 +18,36 @@ public class PageIndex implements Handler {
     // URL of this page relative to http://localhost:7001/
     public static final String URL = "/";
 
-    public static String navbar = """    
+    public static String navbar = """
         <div class="topnav">
-  <div class="topnav-left">
+        <div class="topnav-left">
+        <a href="#">
+        <div class = "menu">
+        <div class = "menu-bar"></div>
+        <div class = "menu-bar"></div>
+        <div class = "menu-bar"></div>
+        </div>
+        </a>
         <a href='/'><img class="logo-main" src="logo.png" /></a>
-            <a href='mission.html'>Our Mission</a>
+            <div class='dropdown'>
+            <span><a href='mission.html'>Our Mission</a></span>
+            <div class='dropdown-content'>
+            <a href='searchMetric.html'>Metric Explorer</a>
+            </div></div>
             <div class='dropdown'>
             <span><a href='data.html'>Our Data</a></span>
             <div class='dropdown-content'>
             <a href='dataquality.html'>Data Quality</a>
             </div></div>
-             </div>
-                 <form class="search" action="/SearchResults" method="get">
+            </div>
+                <form class="search" action="/search" method="get">
                     <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
                         <button class="submit-button" type="submit">
                             <img src="search.png" alt="Search" />
                         </button>
                         <button class="filter-button" onclick="openFilter()">Filter</button>
                 </form>
-                    <div class="topnav-right"> 
+                    <div class="topnav-right">
                         <button class="account-button" onclick="openLogin()">Login</button>
                         <button class="account-button" onclick="openSignup()">Signup</button>
                     </div>
@@ -49,7 +60,7 @@ public class PageIndex implements Handler {
 
         // Add some Header information
         html = html + "<head>" + 
-               "<title>Homepage</title>";
+            "<title>Homepage</title>";
 
         // Add some CSS (external file)
         html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
@@ -69,11 +80,11 @@ public class PageIndex implements Handler {
         html = html + navbar;
 
         // Add header content block
-         html = html +  """
+        html = html +  """
             <div class='header'>
-             <img src='earth-image.jpeg' alt='Weather Background' class='header-bg-image'  draggable =false/>
+            <img src='earth-image.jpeg' alt='Weather Background' class='header-bg-image'  draggable =false/>
             <div class='header-overlay'>
-             Welcome to Weather Report
+            Welcome to AusClimateView
             </div>
             </div>
             """;
