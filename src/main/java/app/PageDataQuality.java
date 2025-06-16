@@ -189,6 +189,12 @@ public class PageDataQuality implements Handler {
                 metricName = metricName.replaceFirst(first,first.toUpperCase());
                 }
                 html += """
+                        <h1>Results</h1>
+                        <p>Displaying the first 
+                        """ + qualityList.size() + " results.</p>" +
+                        "<br><p><b>Selected Parameters</b><br>Flag: " + selectedFlag + "   Start Date: " + selectedStartDate +
+                        "   End Date: " + selectedEndDate + "   Dataset: " + metricName + "</p>" +
+                        """
                         <table class='descTables'><tr class='descTables'>
                         <th class='descTables'>LocationID</th>
                         <th class='descTables'>Site Name</th>
