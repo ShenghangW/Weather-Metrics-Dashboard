@@ -61,26 +61,59 @@ public class PageDataQuality implements Handler {
         // Add Div for page Content
         html = html + "<div class='content'>";
 
+        html += """
+                <script>
+                    function updateOptions() {
+                        const category = document.getElementById('category').value;
+                        const metric = document.getElementById('metric');
+                        metric.innerHTML = ''; // Clear previous options
+
+                        const options = {
+                            hum: ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm'],
+                            cloud: ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm']
+                        };
+
+                        if (category && options[category]) {
+                            options[category].forEach(function(item) {
+                                const option = document.createElement('option');
+                                option.text = item;
+                                metric.appendChild(option);
+                            });
+                            document.getElementById('metric-container').style.display = 'block';
+                        } else {
+                            document.getElementById('metric-container').style.display = 'none';
+                        }
+                    }
+                </script>
+                """;
+
         if (context.method().equals("GET")) {
             // Add HTML for the page content
             html += """
                         <form action="/dataquality.html" method="post">
-                        <label for="categories">Select dataset:</label>
-                        <select name="categories" id="categories">
-                        <option value="precipitation">Precipitation</option>
-                        <option value="evaporation">Evaporation</option>
-                        <option value="temperature">Temperature</option>
-                        <option value="humidity">Humidity</option>
-                        <option value="sunshine">Sunshine</option>
+                        <label for="category"></label>
+                        <select name="category" id="category" onchange="updateOptions()">
+                        <option value="" disabled selected>Select dataset</option>
+                        <option value="precip">Precipitation</option>
+                        <option value="evap">Evaporation</option>
+                        <option value="maxtemp">Temperature (Max)</option>
+                        <option value="mintemp">Temperature (Min)</option>
+                        <option value="hum">Humidity</option>
+                        <option value="sun">Sunshine</option>
                         <option value="cloud">Cloud Coverage</option>
                         </select>
-                        <button type='submit'>Submit</button>
+                        <div id='metric-container' style='display:none; margin-top:10px;'>
+                        <label for='metric'>Select time of day:</label>
+                        <select name='metric' id='metric'></select>
+                        </div>
+                        <br></br><button type='submit'>Submit</button>
                         </form>
                     """;
         } else if (context.method().equals("POST")) {
-            String selectedCategory = context.formParam("categories");
+            String selectedCategory = context.formParam("category");
+            String selectedMetric = context.formParam("metric");
 
-            html += "<p>You selected dataset: <strong>" + selectedCategory + "</strong></p>" +
+            html += "<p>You selected dataset: <strong>" + selectedCategory + selectedMetric + "</strong></p>" +
                     "<a href='/dataquality.html'>Back</a>";
         }
         // Close Content div
