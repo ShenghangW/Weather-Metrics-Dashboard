@@ -35,33 +35,7 @@ public class PageSearchResults implements Handler {
 
         // Add the topnav
         // This uses a Java v15+ Text Block
-        html = html + """    
-        <div class="topnav">
-        <div class="topnav-left">
-        <a href="#">
-        <div class = "menu">
-        <div class = "menu-bar"></div>
-        <div class = "menu-bar"></div>
-        <div class = "menu-bar"></div>
-        </div>
-        </a>           
-        <a href='/'><img class="logo-main" src="logo.png" /></a>
-            <a href='mission.html'>Our Mission</a>
-            <a href='equipment.html'>Our Data</a>
-             </div>
-                 <form class="search" action="/search" method="get">
-                    <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
-                        <button class="submit-button" type="submit">
-                            <img src="search.png" alt="Search" />
-                        </button>
-                        <button class="filter-button" onclick="openFilter()">Filter</button>
-                </form>
-                    <div class="topnav-right"> 
-                        <button class="account-button" onclick="openLogin()">Login</button>
-                        <button class="account-button" onclick="openSignup()">Signup</button>
-                    </div>
-                </div>
-        """;
+        html = html + PageIndex.navbar;
 
         // Add header content block
         html = html + """

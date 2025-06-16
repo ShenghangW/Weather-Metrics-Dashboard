@@ -47,19 +47,6 @@ body {
 
 /* CSS for navBar */
 
-.menu {
-   display: flex;
-   flex-direction: column; gap: 4px;
-   justify-content: center;
-   align-items: center;
-}
-.menu-bar {
-   width: 25px;
-   height: 5px;
-   background-color: black;
-
-}
-
 .logo-main{
    width: 60px;
    height: 20px;
@@ -204,6 +191,16 @@ body {
 .slide-content p {
     font-size: 18px;
     color: #555;
+}
+
+.rainfall-bg {
+    background-image: url(/src/main/resources/images/Rainfall-image.png);
+    object-fit: cover;
+}
+
+.coldest-bg {
+    background-image: url(/src/main/resources/images/Coldest-image.png);
+    object-fit: cover;
 }
 
 @keyframes slide {

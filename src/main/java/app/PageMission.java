@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 
@@ -17,7 +18,7 @@ public class PageMission implements Handler {
                     + "<a href='/'>Homepage</a>"
                     + "<a href='mission.html'>Our Mission</a>"
                     + "<a href='data.html'>Our Data</a>"
-                    + "<a href='page2A.html'>Sub Task 2.A</a>"
+                    + "<a href='SearchResults.html'>Sub Task 2.A</a>"
                     + "<a href='page2B.html'>Sub Task 2.B</a>"
                     + "<a href='dataquality.html'>Data Quality</a>"
                     + "<a href='page3A.html'>Sub Task 3.A</a>"

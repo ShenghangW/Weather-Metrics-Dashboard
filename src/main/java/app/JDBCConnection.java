@@ -222,7 +222,11 @@ public class JDBCConnection {
         Statement stmt = conn.createStatement();
         stmt.setQueryTimeout(30);
 
-        String query = "SELECT count(*) FROM FlagQuality;";
+        String query = """
+                select min(STRFTIME('%Y',date)) as minyear, max(STRFTIME('%Y',date)) as maxyear
+                from datetime
+                limit 1;
+                """;
         ResultSet rs = stmt.executeQuery(query);
 
         if (rs.next()) {
@@ -254,12 +258,55 @@ public class JDBCConnection {
         stmt.setQueryTimeout(30);
 
         String query = """
-        SELECT count(*) FROM FlagQuality;;
+        Select l.site, l.name as Weather_Station, t.minTemp as Minimum_temperature, mintempqual as flag
+        from temperature as t
+        join location as l on t.location = l.site
+        where t.minTemp is not null AND TRIM(t.minTemp) <> '' 
+        AND flag == 'Y'
+        order by Minimum_temperature asc
+        limit 1;
         """;
 
         ResultSet rs = stmt.executeQuery(query);
         if (rs.next()) {
-            station = rs.getString("Name");
+            station = rs.getString("Weather_Station");
+        }
+
+        stmt.close();
+    } catch (SQLException e) {
+        System.err.println("getColdestStationName Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return station;
+    }
+
+        public String getColdestStationData() {
+    String station = "0";
+    Connection conn = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        Statement stmt = conn.createStatement();
+        stmt.setQueryTimeout(30);
+
+        String query = """
+        Select l.site, l.name as Weather_Station, t.minTemp as Minimum_temperature, mintempqual as flag
+        from temperature as t
+        join location as l on t.location = l.site
+        where t.minTemp is not null AND TRIM(t.minTemp) <> '' 
+        AND flag == 'Y'
+        order by Minimum_temperature asc
+        limit 1;
+        """;
+
+        ResultSet rs = stmt.executeQuery(query);
+        if (rs.next()) {
+            station = rs.getString("Minimum_temperature") + " <sup>o</sup>C";
         }
 
         stmt.close();
@@ -285,12 +332,18 @@ public class JDBCConnection {
         stmt.setQueryTimeout(30);
 
         String query = """
-            SELECT count(*) FROM FlagQuality;
+            Select l.site, l.name as Weather_Station, p.precipitation as precipitation, precipqual as flag
+            from precipitation as p
+            join location as l on p.location = l.site
+            where p.precipitation is not null AND TRIM(p.precipitation) <> '' 
+            AND flag == 'Y'
+            order by precipitation desc
+            limit 1;
         """;
 
         ResultSet rs = stmt.executeQuery(query);
         if (rs.next()) {
-            station = rs.getString("Name");
+            station = rs.getString("Weather_Station");
         }
 
         stmt.close();
@@ -304,5 +357,42 @@ public class JDBCConnection {
         }
     }
     return station;
+    }
+
+    public String getMostRainfallStationData() {
+    String stationData = "0";
+    Connection conn = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        Statement stmt = conn.createStatement();
+        stmt.setQueryTimeout(30);
+
+        String query = """
+            Select l.site, l.name as Weather_Station, p.precipitation as precipitation, precipqual as flag
+            from precipitation as p
+            join location as l on p.location = l.site
+            where p.precipitation is not null AND TRIM(p.precipitation) <> '' 
+            AND flag == 'Y'
+            order by precipitation desc
+            limit 1;
+        """;
+
+        ResultSet rs = stmt.executeQuery(query);
+        if (rs.next()) {
+            stationData = rs.getString("precipitation") + " mm";
+        }
+
+        stmt.close();
+    } catch (SQLException e) {
+        System.err.println("getMostRainfallStationData Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return stationData;
     }
 }

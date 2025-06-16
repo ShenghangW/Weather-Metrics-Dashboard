@@ -21,18 +21,11 @@ public class PageIndex implements Handler {
     public static String navbar = """    
         <div class="topnav">
   <div class="topnav-left">
-        <a href="#">
-        <div class = "menu">
-        <div class = "menu-bar"></div>
-        <div class = "menu-bar"></div>
-        <div class = "menu-bar"></div>
-        </div>
-        </a>           
         <a href='/'><img class="logo-main" src="logo.png" /></a>
             <a href='mission.html'>Our Mission</a>
             <a href='data.html'>Our Data</a>
              </div>
-                 <form class="search" action="/search" method="get">
+                 <form class="search" action="/SearchResults" method="get">
                     <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
                         <button class="submit-button" type="submit">
                             <img src="search.png" alt="Search" />
@@ -72,7 +65,7 @@ public class PageIndex implements Handler {
             <div class='header'>
              <img src='earth-image.jpeg' alt='Weather Background' class='header-bg-image'  draggable =false/>
             <div class='header-overlay'>
-             Welcome to AusClimateView
+             Welcome to Weather Report
             </div>
             </div>
             """;
@@ -88,12 +81,14 @@ public class PageIndex implements Handler {
         "<h2>Year Range</h2><p>" + jdbc.getYearRange() + "</p>" +
         "</div></div>" +
 
-        "<div class='slide'><div class='slide-content'>" +
+        "<div class='slide coldest-bg'><div class='slide-content'>" +
         "<h2>Lowest Recorded Temperature Station</h2><p>" + jdbc.getColdestStationName() + "</p>" +
+        "<p>" + jdbc.getColdestStationData() + "</p>" +
         "</div></div>" +
 
-        "<div class='slide'><div class='slide-content'>" +
+        "<div class='slide rainfall-bg'><div class='slide-content'>" +
         "<h2>Highest Recorded Rainfall Station</h2><p>" + jdbc.getMostRainfallStationName() + "</p>" +
+        "<p>" + jdbc.getMostRainfallStationData() + "</p>" +
         "</div></div>" +
 
         "</div></div>";
