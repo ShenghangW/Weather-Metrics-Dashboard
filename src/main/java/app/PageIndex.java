@@ -30,7 +30,11 @@ public class PageIndex implements Handler {
         </a>           
         <a href='/'><img class="logo-main" src="logo.png" /></a>
             <a href='mission.html'>Our Mission</a>
-            <a href='data.html'>Our Data</a>
+            <div class='dropdown'>
+            <span><a href='data.html'>Our Data</a></span>
+            <div class='dropdown-content'>
+            <a href='dataquality.html'>Data Quality</a>
+            </div></div>
              </div>
                  <form class="search" action="/search" method="get">
                     <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
