@@ -64,7 +64,8 @@ public class PageDataQuality implements Handler {
         if (context.method().equals("GET")) {
             // Add HTML for the page content
             html += """
-                        <form action='/dataquality.html' method='post'>
+                        <form action="/dataquality.html" method="post">
+                        <label for="categories">Select dataset:</label>
                         <select name="categories" id="categories">
                         <option value="precipitation">Precipitation</option>
                         <option value="evaporation">Evaporation</option>
@@ -77,9 +78,9 @@ public class PageDataQuality implements Handler {
                         </form>
                     """;
         } else if (context.method().equals("POST")) {
-            String selectedQuality = context.formParam("quality");
+            String selectedCategory = context.formParam("categories");
 
-            html += "<p>You selected quality level: <strong>" + selectedQuality + "</strong></p>" +
+            html += "<p>You selected dataset: <strong>" + selectedCategory + "</strong></p>" +
                     "<a href='/dataquality.html'>Back</a>";
         }
         // Close Content div
