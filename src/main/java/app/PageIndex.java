@@ -56,6 +56,10 @@ public class PageIndex implements Handler {
         html = html + "</head>";
 
         JDBCConnection jdbc = new JDBCConnection();
+
+        String yearRange = jdbc.getYearRange();
+        String coldest = jdbc.getColdestStationName();
+        String rainfall = jdbc.getMostRainfallStationName();
         
         // Add the body
         html = html + "<body>";
@@ -82,17 +86,15 @@ public class PageIndex implements Handler {
         "<div class='slides'>" +
 
         "<div class='slide'><div class='slide-content'>" +
-        "<h2>Year Range</h2><p>" + jdbc.getYearRange() + "</p>" +
+        "<h2>Year Range</h2><p>" + yearRange + "</p>" +
         "</div></div>" +
 
         "<div class='slide coldest-bg'><div class='slide-content'>" +
-        "<h2>Lowest Recorded Temperature Station</h2><p>" + jdbc.getColdestStationName() + "</p>" +
-        "<p>" + jdbc.getColdestStationData() + "</p>" +
+        "<h2>Lowest Recorded Temperature Station</h2><p>" + coldest + "</p>" +
         "</div></div>" +
 
         "<div class='slide rainfall-bg'><div class='slide-content'>" +
-        "<h2>Highest Recorded Rainfall Station</h2><p>" + jdbc.getMostRainfallStationName() + "</p>" +
-        "<p>" + jdbc.getMostRainfallStationData() + "</p>" +
+        "<h2>Highest Recorded Rainfall Station</h2><p>" + rainfall + "</p>" +
         "</div></div>" +
 
         "</div></div>";

@@ -194,12 +194,12 @@ body {
 }
 
 .rainfall-bg {
-    background-image: url(/src/main/resources/images/Rainfall-image.png);
+    background-image: url(images/Rainfall-image.png);
     object-fit: cover;
 }
 
 .coldest-bg {
-    background-image: url(/src/main/resources/images/Coldest-image.png);
+    background-image: url(images/Coldest-image.png);
     object-fit: cover;
 }
 
