@@ -537,3 +537,7 @@ body {
   text-shadow: 2px 2px 4px #000;
   text-align: center;
 }
+
+.selected-params {
+  padding-right: 50px;
+}

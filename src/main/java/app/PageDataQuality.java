@@ -126,9 +126,6 @@ public class PageDataQuality implements Handler {
                 }
                 </script>
                 """;
-
-        if (context.method().equals("GET")) {
-            // Add HTML for the page content
             html += """
                         <p>To take a closer look at the poor quality data, please select the following options:</p>
                         <form action="/dataquality.html" method="post">
@@ -162,22 +159,35 @@ public class PageDataQuality implements Handler {
                         <label for='time'>Select time of day:</label>
                         <select name='time' id='time'></select>
                         </div><br>
-                        <label for="startDate">Please enter start date:</label>
+                        <label for="startDate">Start date:</label>
                         <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
-                        <label for="endDate">Please enter end date:</label>
-                        <input type="date" id="endDate" name="endDate" placeholder="dd/mm/yyyy" required></input>
+                        <label for="endDate">End date:</label>
+                        <input type="date" id="endDate" name="endDate" placeholder="dd/mm/yyyy" required></input><br>
+                        <label for="sort">Sort by:</label>
+                        <select name="sort" id="sort">
+                        <option value="location">Location ID</option>
+                        <option value="name">Site Name</option>
+                        <option value="date">Date</option>
+                        <option value="measure">Measurement</option>
+                        </select><label for="ascdesc"></label><select name="ascdesc" id="ascdesc">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                        </select>
                         <br><button type='submit'>Submit</button>
                         </form>
                     """;
-        } else if (context.method().equals("POST")) {
+
+        if (context.method().equals("POST")) {
             String selectedMetric = context.formParam("metric");
             String selectedTime = context.formParam("time");
             String selectedStartDate = context.formParam("startDate");
             String selectedEndDate = context.formParam("endDate");
             String selectedFlag = context.formParam("flag");
+            String selectedSort = context.formParam("sort");
+            String selectedAscDesc = context.formParam("ascdesc");
             String metricName = selectedMetric;
 
-            ArrayList<QUALITY> qualityList = getQuality(selectedMetric, selectedTime, selectedStartDate, selectedEndDate, selectedFlag);
+            ArrayList<QUALITY> qualityList = getQuality(selectedMetric, selectedTime, selectedStartDate, selectedEndDate, selectedFlag, selectedSort, selectedAscDesc);
 
             if (! qualityList.get(0).getName().equals("0")) {
                 if (selectedMetric.equals("humid")) {
@@ -192,8 +202,11 @@ public class PageDataQuality implements Handler {
                         <h1>Results</h1>
                         <p>Displaying the first 
                         """ + qualityList.size() + " results.</p>" +
-                        "<br><p><b>Selected Parameters</b><br>Flag: " + selectedFlag + "   Start Date: " + selectedStartDate +
-                        "   End Date: " + selectedEndDate + "   Dataset: " + metricName + "</p>" +
+                        "<p><table class='selected-params'><tr class='selected-params'><td class='selected-params' colspan=4 align='center'><b>Selected Parameters</b></td></tr><br>" +
+                        "<tr class='selected-params'><td class='selected-params'>" +
+                        "<b>Flag:</b> " + selectedFlag + "</td><td class='selected-params'><b>Start Date:</b> " + selectedStartDate +
+                        "</td><td class='selected-params'><b>End Date:</b> " + selectedEndDate + "</td><td class='selected-params'><b> Dataset:</b> " + metricName +
+                        "</td></tr></table></p>" +
                         """
                         <table class='descTables'><tr class='descTables'>
                         <th class='descTables'>LocationID</th>
@@ -243,7 +256,7 @@ public class PageDataQuality implements Handler {
         context.html(html);
     }
 
-    public ArrayList<QUALITY> getQuality(String metric, String time, String startDate, String endDate, String flag) {
+    public ArrayList<QUALITY> getQuality(String metric, String time, String startDate, String endDate, String flag, String sort, String ascdesc) {
         // Create the ArrayList of FlagQuality objects to return
         // Create an array called flags
         ArrayList<QUALITY> quality = new ArrayList<QUALITY>();
@@ -257,6 +270,10 @@ public class PageDataQuality implements Handler {
             } else if (metric.equals("okta")) {
                 metricTable = "cloud";
             }
+        }
+
+        if (sort.equals("metric")) {
+            sort = metricTable;
         }
 
         // Setup the variable for the JDBC connection
@@ -276,7 +293,7 @@ public class PageDataQuality implements Handler {
                     " metricValue, " + metricTime + "qual metricQuality from " + metricTable +
                     " join location on " + metricTable + ".Location = location.site" +
                     " where metricQuality = '" + flag + "' and (Date between '"+ startDate +
-                    "' and '" + endDate + "') order by Location asc, Date asc limit 50";
+                    "' and '" + endDate + "') order by " + sort + " " + ascdesc + " limit 50";
             // Put the SQL results into a result set
             ResultSet results = statement.executeQuery(query);
 
