@@ -1,14 +1,14 @@
 /* External CSS style file */
 
-* {
-   box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-body {
-   font-family: Arial;
-   background: #ffffff;
-   margin: 0%;
-}
+  body {
+    font-family: Arial;
+    background: #ffffff;
+    margin: 0%;
+  }
 
 /*
   css for Header with background image 
@@ -19,7 +19,7 @@ body {
   height: 400px;
   overflow: hidden;
   display: flex;
-  align-items: flex-end;       
+  align-items: flex-end;
   justify-content: flex-start; 
 }
 
@@ -47,10 +47,10 @@ body {
 
 /* CSS for navBar */
 
-.logo-main{
-   width: 60px;
-   height: 20px;
-}
+  .logo-main{
+    width: 60px;
+    height: 20px;
+  }
 .search {
   display: flex;
   flex-grow: 1;
@@ -79,10 +79,10 @@ body {
   justify-content: center;
 }
 
-.submit-button img {
-   height: 20px;
-   width: 20px;
-}
+  .submit-button img {
+    height: 20px;
+    width: 20px;
+  }
 
 .filter-button {
   height: 40px;
@@ -125,28 +125,28 @@ body {
   gap: 0.5rem;
 }
 
- .topnav a {
-   float: left;
-   display: block;
-   color: #f2f2f2;
-   text-align: center;
-   text-decoration: none;
- }
+  .topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+  }
 
- .topnav a:hover {
-   background-color: #ddd;
-   color: black;
- }
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
 
- /* CSS for content of Homepage*/
+/* CSS for content of Homepage*/
 
 .content {
   max-width: 1500px;
-  margin: 0 auto;        
+  margin: 0 auto;
   background-color: #ddd;
-  border-radius: 0;      
-  padding: 0;            
-  box-shadow: none;      
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .slide-show {
@@ -214,14 +214,14 @@ body {
     100% { transform: translateX(-200%); }
 }
 
- .footer {
-   background-color: #ffffff;
- }
+  .footer {
+    background-color: #ffffff;
+  }
 
- .descTables {
-  border: 1px solid black;
-  padding: 5px;
-}
+  .descTables {
+    border: 1px solid black;
+    padding: 5px;
+  }
 
 .dataHeader {
   background-image: url('datapageheaderbg.jpg');
@@ -536,6 +536,27 @@ body {
   color: white; 
   text-shadow: 2px 2px 4px #000;
   text-align: center;
+}
+
+.form-group {
+  font-size: 1.5em;
+}
+
+.form-group select {
+  width: 5%;
+  height: 5%;
+  /* font: 1.2em */
+}
+
+.form-group input {
+  height: 5%;
+  width: 5%;
+  font: 1.2em
+}
+
+.font-group button {
+  width: 10%;
+  height: 5%;
 }
 
 .selected-params {

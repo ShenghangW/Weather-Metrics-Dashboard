@@ -331,5 +331,117 @@
 
         return result;
         }
+
+        public ArrayList<MetricData> getMetricData(String metric, String startStation, String endStation,
+                                            String startDate, String endDate, String order, String time) {
+    ArrayList<MetricData> results = new ArrayList<>();
+    Connection conn = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        String tableName = metric.toLowerCase();
+        String actualColumn = metric;
         
+        if ("Humidity".equals(metric)) {
+            tableName = "humidity";
+            actualColumn = "humid" + time;
+        }
+        else if ("Cloud".equals(metric)) {
+            tableName = "cloud";
+            actualColumn = "cloud_okta" + time;
+        }
+        else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
+            tableName = "temperature";
+        }
+
+        String query = "SELECT Location, YMD, " + actualColumn + " AS metric_value " +
+                        "FROM " + tableName + " " +
+                        "WHERE Location BETWEEN '" + startStation + "' AND '" + endStation + "' " +
+                        "AND YMD BETWEEN '" + startDate + "' AND '" + endDate + "' " +
+                        "ORDER BY " + actualColumn + " " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+        stmt.setQueryTimeout(30);
+
+        while(rs.next()) {
+            results.add(new MetricData(
+                rs.getString("metric_value"),  // Use the alias
+                rs.getString("YMD"),
+                rs.getString("Location")
+            ));
+        }
+        stmt.close();
+    } catch(SQLException e) {
+        System.err.println("MetricData Error: " + e);
+        e.printStackTrace();
+    } finally {
+        try {
+            if(conn != null) {
+                conn.close();
+            }
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
+    return results;
+}
+
+public ArrayList<StateSummary> getStateSummary(String metric, String startStation, String endStation,
+                                                String startDate, String endDate, String order, String time) {
+    ArrayList<StateSummary> sum = new ArrayList<>();
+    Connection conn = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        String tableName = metric.toLowerCase();
+        String actualColumn = metric;  // Default to metric name
+        
+        // Handle special cases
+        if ("Humidity".equals(metric)) {
+            tableName = "humidity";
+            actualColumn = "humid" + time;
+        }
+        else if ("Cloud".equals(metric)) {
+            tableName = "cloud";
+            actualColumn = "cloud_okta" + time;
+        }
+        else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
+            tableName = "temperature";
+        }
+
+        // Build query with correct column reference
+        String query = "SELECT L.state, COALESCE(SUM(x." + actualColumn + "), 0) AS total_value " +
+                        "FROM Location L " +
+                        "LEFT JOIN " + tableName + " x ON L.site = x.Location " +
+                        "WHERE L.site BETWEEN '" + startStation + "' AND '" + endStation + "' " +
+                        "AND x.YMD BETWEEN '" + startDate + "' AND '" + endDate + "' " +
+                        "GROUP BY L.state " +
+                        "ORDER BY total_value " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+        stmt.setQueryTimeout(30);
+
+        while(rs.next()) {
+            sum.add(new StateSummary(
+                rs.getString("state"),
+                rs.getDouble("total_value")  // Use the alias
+            ));
+        }
+        stmt.close();
+    } catch(SQLException e) {
+        System.err.println("StateSummary Error: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if(conn != null) {
+                conn.close();
+            }
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return sum;
+    }
+}
