@@ -56,6 +56,7 @@ public class App {
         app.post(PageDataQuality.URL, new PageDataQuality());
         app.post(PageST3A.URL, new PageST3A());
         app.post(PageST3B.URL, new PageST3B());
+        app.post(PageST3C.URL, new PageST3C());
     }
 
 }
