@@ -126,56 +126,69 @@ public class PageDataQuality implements Handler {
                 }
                 </script>
                 """;
-            html += """
-                        <p>To take a closer look at the poor quality data, please select the following options:</p>
-                        <form action="/dataquality.html" method="post">
-                        <label for="flag"></label>
-                        <select name="flag" id="flag" required>
-                        <option value="" disabled selected>Select quality flag</option>
-                    """;
+        html += """
+                    <p>To take a closer look at the poor quality data, please select the following options:</p>
+                    <form action="/dataquality.html" method="post">
+                    <label for="flag"></label>
+                    <select name="flag" id="flag" required>
+                    <option value="" disabled selected>Select quality flag</option>
+                """;
 
-            for (FLAG flagsObj : flags) {
-                String flagName = flagsObj.getFlag();
+        for (FLAG flagsObj : flags) {
+            String flagName = flagsObj.getFlag();
 
-                if (flagName.charAt(0) != 'Y') {
-                    html += "<option value='" + flagName + "'>" + flagName + "</option>";
-                }
+            if (flagName.charAt(0) != 'Y') {
+                html += "<option value='" + flagName + "'>" + flagName + "</option>";
             }
+        }
 
-            html += """
-                        </select>
-                        <label for="metric"></label>
-                        <select name="metric" id="metric" onchange="updateOptions()" required>
-                        <option value="" disabled selected>Select dataset</option>
-                        <option value="precipitation">Precipitation</option>
-                        <option value="evaporation">Evaporation</option>
-                        <option value="maxtemp">Temperature (Max)</option>
-                        <option value="mintemp">Temperature (Min)</option>
-                        <option value="humid">Humidity</option>
-                        <option value="sunshine">Sunshine</option>
-                        <option value="okta">Cloud Coverage</option>
-                        </select>
-                        <div id='time-container' style='display:none; margin-top:10px;'>
-                        <label for='time'>Select time of day:</label>
-                        <select name='time' id='time'></select>
-                        </div><br>
-                        <label for="startDate">Start date:</label>
-                        <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
-                        <label for="endDate">End date:</label>
-                        <input type="date" id="endDate" name="endDate" placeholder="dd/mm/yyyy" required></input><br>
-                        <label for="sort">Sort by:</label>
-                        <select name="sort" id="sort">
-                        <option value="location">Location ID</option>
-                        <option value="name">Site Name</option>
-                        <option value="date">Date</option>
-                        <option value="measure">Measurement</option>
-                        </select><label for="ascdesc"></label><select name="ascdesc" id="ascdesc">
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                        </select>
-                        <br><button type='submit'>Submit</button>
-                        </form>
-                    """;
+        html += """
+                    </select>
+                    <label for="metric"></label>
+                    <select name="metric" id="metric" onchange="updateOptions()" required>
+                    <option value="" disabled selected>Select dataset</option>
+                    <option value="precipitation">Precipitation</option>
+                    <option value="evaporation">Evaporation</option>
+                    <option value="maxtemp">Temperature (Max)</option>
+                    <option value="mintemp">Temperature (Min)</option>
+                    <option value="humid">Humidity</option>
+                    <option value="sunshine">Sunshine</option>
+                    <option value="okta">Cloud Coverage</option>
+                    </select>
+                    <div id='time-container' style='display:none; margin-top:10px;'>
+                    <label for='time'>Select time of day:</label>
+                    <select name='time' id='time'></select>
+                    </div><br>
+                    <label for="startDate">Start date:</label>
+                    <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
+                    <label for="endDate">End date:</label>
+                    <input type="date" id="endDate" name="endDate" placeholder="dd/mm/yyyy" required></input><br>
+                    <label for="sort">Sort by:</label>
+                    <select name="sort" id="sort">
+                    <option value="location">Location ID</option>
+                    <option value="name">Site Name</option>
+                    <option value="date">Date</option>
+                    <option value="measure">Measurement</option>
+                    </select><label for="ascdesc"></label><select name="ascdesc" id="ascdesc">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                    </select>
+                    <p><b>State Summary</b></p>
+                    <label for="state">Select State:</label>
+                    <select name="state" id="state">
+                    <option value="A.A.T">Antarctic Territories</option>
+                    <option value="A.E.T.">Extended Territories</option>
+                    <option value="N.S.S.">New South Wales</option>
+                    <option value="N.T.">Northern Territory</option>
+                    <option value="QLD">Queensland</option>
+                    <option value="S.A.">South Australia</option>
+                    <option value="TAS">Tasmania</option>
+                    <option value="VIC">Victoria</option>
+                    <option value="W.A.">Western Australia</option>
+                    </select>
+                    <br><button type='submit'>Submit</button>
+                    </form>
+                """;
 
         if (context.method().equals("POST")) {
             String selectedMetric = context.formParam("metric");
@@ -185,38 +198,45 @@ public class PageDataQuality implements Handler {
             String selectedFlag = context.formParam("flag");
             String selectedSort = context.formParam("sort");
             String selectedAscDesc = context.formParam("ascdesc");
+            String selectedState = context.formParam("state");
             String metricName = selectedMetric;
 
-            ArrayList<QUALITY> qualityList = getQuality(selectedMetric, selectedTime, selectedStartDate, selectedEndDate, selectedFlag, selectedSort, selectedAscDesc);
+            ArrayList<QUALITY> qualityList = getQuality(selectedMetric, selectedTime, selectedStartDate,
+                    selectedEndDate, selectedFlag, selectedSort, selectedAscDesc);
+            ArrayList<SUMMARY> summaryList = getSummary(selectedMetric, selectedTime, selectedStartDate,
+                    selectedEndDate, selectedState);
 
-            if (! qualityList.get(0).getName().equals("0")) {
+            if (qualityList.size() > 0) {
                 if (selectedMetric.equals("humid")) {
-                metricName = "Humidity";
+                    metricName = "Humidity";
                 } else if (selectedMetric.equals("okta")) {
-                metricName = "Cloud Coverage";
+                    metricName = "Cloud Coverage";
                 } else {
-                String first = String.valueOf(metricName.charAt(0));
-                metricName = metricName.replaceFirst(first,first.toUpperCase());
+                    String first = String.valueOf(metricName.charAt(0));
+                    metricName = metricName.replaceFirst(first, first.toUpperCase());
                 }
                 html += """
                         <h1>Results</h1>
-                        <p>Displaying the first 
+                        <p>Displaying the first
                         """ + qualityList.size() + " results.</p>" +
-                        "<p><table class='selected-params'><tr class='selected-params'><td class='selected-params' colspan=4 align='center'><b>Selected Parameters</b></td></tr><br>" +
+                        "<p><table class='selected-params'><tr class='selected-params'><td class='selected-params' colspan=4 align='center'><b>Selected Parameters</b></td></tr><br>"
+                        +
                         "<tr class='selected-params'><td class='selected-params'>" +
-                        "<b>Flag:</b> " + selectedFlag + "</td><td class='selected-params'><b>Start Date:</b> " + selectedStartDate +
-                        "</td><td class='selected-params'><b>End Date:</b> " + selectedEndDate + "</td><td class='selected-params'><b> Dataset:</b> " + metricName +
+                        "<b>Flag:</b> " + selectedFlag + "</td><td class='selected-params'><b>Start Date:</b> "
+                        + selectedStartDate +
+                        "</td><td class='selected-params'><b>End Date:</b> " + selectedEndDate
+                        + "</td><td class='selected-params'><b> Dataset:</b> " + metricName +
                         "</td></tr></table></p>" +
                         """
-                        <table class='descTables'><tr class='descTables'>
-                        <th class='descTables'>LocationID</th>
-                        <th class='descTables'>Site Name</th>
-                        <th class='descTables'>Date</th>
-                        <th class='descTables'>
-                        """ + metricName +
+                                <table class='descTables'><tr class='descTables'>
+                                <th class='descTables'>LocationID</th>
+                                <th class='descTables'>Site Name</th>
+                                <th class='descTables'>Date</th>
+                                <th class='descTables'>
+                                """ + metricName +
                         """
-                        </th></tr>         
-                        """;
+                                </th></tr>
+                                """;
 
                 for (QUALITY qualityObj : qualityList) {
                     String location = qualityObj.getLocation();
@@ -229,8 +249,29 @@ public class PageDataQuality implements Handler {
                             "</td><td class='descTables'>" + date +
                             "</td><td class='descTables'>" + value +
                             "</td></tr>";
-                            
+
                 }
+                html += "</table><br>";
+
+                html += "<h1>Summary</h1>" +
+                        "<p>Number of each quality flag for " + metricName + " data in " + selectedState +
+                        " from " + selectedStartDate + " to " + selectedEndDate + ".";
+            
+                                
+                html += """
+                        <table class='descTables'><tr class='descTables'>
+                        <th class='descTables'>Flag Name</th>
+                        <th class='descTables'>Number of Flags</th></tr>
+                        """;
+
+                for (SUMMARY summaryObj : summaryList) {
+                    String flagName = summaryObj.getFlagName();
+                    String flagNumber = summaryObj.getFlagNumber();
+
+                    html += "<tr class='descTables'><td class='descTables'>" + flagName +
+                            "</td><td class='descTables'>" + flagNumber + "</td></tr>";
+                }
+
                 html += "</table>";
             } else {
                 html += "<p>No results</p>";
@@ -256,7 +297,8 @@ public class PageDataQuality implements Handler {
         context.html(html);
     }
 
-    public ArrayList<QUALITY> getQuality(String metric, String time, String startDate, String endDate, String flag, String sort, String ascdesc) {
+    public ArrayList<QUALITY> getQuality(String metric, String time, String startDate, String endDate, String flag,
+            String sort, String ascdesc) {
         // Create the ArrayList of FlagQuality objects to return
         // Create an array called flags
         ArrayList<QUALITY> quality = new ArrayList<QUALITY>();
@@ -292,7 +334,7 @@ public class PageDataQuality implements Handler {
             String query = "select location Location, name Name, YMD Date, " + metricTime +
                     " metricValue, " + metricTime + "qual metricQuality from " + metricTable +
                     " join location on " + metricTable + ".Location = location.site" +
-                    " where metricQuality = '" + flag + "' and (Date between '"+ startDate +
+                    " where metricQuality = '" + flag + "' and (Date between '" + startDate +
                     "' and '" + endDate + "') order by " + sort + " " + ascdesc + " limit 50";
             // Put the SQL results into a result set
             ResultSet results = statement.executeQuery(query);
@@ -317,7 +359,7 @@ public class PageDataQuality implements Handler {
         } catch (SQLException e) {
             // If there is an error, lets just pring the error
             System.err.println(e.getMessage());
-            QUALITY qualityObj = new QUALITY("0","0","0","0");
+            QUALITY qualityObj = new QUALITY("0", "0", "0", "0");
 
             // Add the FLAG object to the flags array
             quality.add(qualityObj);
@@ -334,5 +376,76 @@ public class PageDataQuality implements Handler {
         }
 
         return quality;
+    }
+
+    public ArrayList<SUMMARY> getSummary(String metric, String time, String startDate, String endDate, String state) {
+        // Create the ArrayList of FlagQuality objects to return
+        // Create an array called flags
+        ArrayList<SUMMARY> summary = new ArrayList<SUMMARY>();
+        String metricTime = metric;
+        String metricTable = metric;
+
+        if (metric.equals("humid") || metric.equals("okta")) {
+            metricTime += time;
+            if (metric.equals("humid")) {
+                metricTable = "humidity";
+            } else if (metric.equals("okta")) {
+                metricTable = "cloud";
+            }
+        }
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC database
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            // put in a timeout incase the db is not running
+            statement.setQueryTimeout(30);
+
+            // The SQL Query to be executed
+            String query = "select location l, state s, ymd date, " + metricTime + "qual FlagName, count(" + metricTime +
+                    "qual) NumberOfFlags from " + metricTable + " join location on " + metricTable
+                    + ".Location == location.site where state == '" +
+                    state + "' and (date between '" + startDate + "' and '" + endDate
+                    + "') and FlagName != ' ' group by FlagName order by FlagName";
+
+            // Put the SQL results into a result set
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                // Lookup the columns we need
+                String flagName = results.getString("FlagName");
+                String flagNumber = results.getString("NumberOfFlags");
+
+                // Create an FLAG Object
+                SUMMARY summaryObj = new SUMMARY(flagName, flagNumber);
+
+                // Add the FLAG object to the flags array
+                summary.add(summaryObj);
+            }
+
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
+        }
+
+        return summary;
     }
 }
