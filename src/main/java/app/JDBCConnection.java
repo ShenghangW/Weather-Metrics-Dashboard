@@ -446,7 +446,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
     }
     return sum;
     }
-}
+
 
         public ArrayList<String> getStates() {
         ArrayList<String> states = new ArrayList<>();
