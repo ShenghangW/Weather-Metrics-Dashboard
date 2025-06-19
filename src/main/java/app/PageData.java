@@ -92,10 +92,10 @@ public class PageData implements Handler {
                     "</ol>" +
                     "<p>Every data point contains 3 pieces of identifying information:</p>" +
                     "<ul>" +
-                    "<li>MeasurementId: A unique ID number for every data point in our dataset, in the format XYYYYYYY where X represents the " +
+                    "<li><b>MeasurementId:</b> A unique ID number for every data point in our dataset, in the format XYYYYYYY where X represents the " +
                     "category it belongs to according to the list above, and Y represents the unique ID for each category.</li>" +
-                    "<li>" + metadata.get(0).getField() + ": " + metadata.get(0).getDescription() + "</li>" +
-                    "<li>" + metadata.get(1).getField() + ": " + metadata.get(1).getDescription() + "</li>" +
+                    "<li><b>" + metadata.get(0).getField() + ":</b> " + metadata.get(0).getDescription() + "</li>" +
+                    "<li><b>" + metadata.get(1).getField() + ":</b> " + metadata.get(1).getDescription() + "</li>" +
                     "</ul>" +
                     "<p>Each category of data contains various related measurements, which is described in detail in the following tables:</p>";
         
