@@ -32,7 +32,7 @@ public class PageIndex implements Handler {
             <div class='dropdown'>
             <span><a href='mission.html'>Our Mission</a></span>
             <div class='dropdown-content'>
-            <a href='searchMetric.html'>Metric Explorer</a>
+            <a href='metricExplorer.html'>Metric Explorer</a>
             </div></div>
             <div class='dropdown'>
             <span><a href='data.html'>Our Data</a></span>

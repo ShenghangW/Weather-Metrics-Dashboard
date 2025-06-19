@@ -53,6 +53,7 @@ public class App {
         app.post(PageIndex.URL, new PageIndex());
         app.post(PageMission.URL, new PageMission());
         app.post(PageSearchResults.URL, new PageSearchResults());
+        app.post(PageSearchMetrics.URL, new PageSearchMetrics());
         app.post(PageST2B.URL, new PageST2B());
         app.post(PageDataQuality.URL, new PageDataQuality());
         app.post(PageST3A.URL, new PageST3A());
