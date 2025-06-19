@@ -21,13 +21,6 @@ public class PageIndex implements Handler {
     public static String navbar = """
         <div class="topnav">
         <div class="topnav-left">
-        <a href="#">
-        <div class = "menu">
-        <div class = "menu-bar"></div>
-        <div class = "menu-bar"></div>
-        <div class = "menu-bar"></div>
-        </div>
-        </a>
         <a href='/'><img class="logo-main" src="logo.png" /></a>
             <div class='dropdown'>
             <span><a href='mission.html'>Our Mission</a></span>
@@ -40,7 +33,7 @@ public class PageIndex implements Handler {
             <a href='dataquality.html'>Data Quality</a>
             </div></div>
             </div>
-                <form class="search" action="/search" method="get">
+                <form class="search" action="/searchResults.html" method="get">
                     <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
                         <button class="submit-button" type="submit">
                             <img src="search.png" alt="Search" />
@@ -84,7 +77,7 @@ public class PageIndex implements Handler {
             <div class='header'>
             <img src='earth-image.jpeg' alt='Weather Background' class='header-bg-image'  draggable =false/>
             <div class='header-overlay'>
-            Welcome to AusClimateView
+            Welcome to Weather Report
             </div>
             </div>
             """;
@@ -95,16 +88,15 @@ public class PageIndex implements Handler {
         // Add HTML for the page content
         html += "<div class='slide-show'>" +
         "<div class='slides'>" +
-
         "<div class='slide'><div class='slide-content'>" +
         "<h2>Year Range</h2><p>" + yearRange + "</p>" +
         "</div></div>" +
 
-        "<div class='slide coldest-bg'><div class='slide-content'>" +
+        "<div class ='slide coldest-bg'><div class='slide-content'>" +
         "<h2>Lowest Recorded Temperature Station</h2><p>" + coldest + "</p>" +
         "</div></div>" +
 
-        "<div class='slide rainfall-bg'><div class='slide-content'>" +
+        "<div class ='slide rainfall-bg'><div class='slide-content'>" +
         "<h2>Highest Recorded Rainfall Station</h2><p>" + rainfall + "</p>" +
         "</div></div>" +
 
