@@ -565,4 +565,94 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         }
         return station;
     }
+
+    public ArrayList<RegionSummary> getRegionalSummary(String state, double startLat, double endLat, String metric, String time) {
+    ArrayList<RegionSummary> summaries = new ArrayList<>();
+    Connection conn = null;
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+         
+        String metricTable = "";
+        String valueColumn = "";
+
+        if(metric.equalsIgnoreCase("maxTemp")){
+            metricTable = "Temperature";
+            valueColumn = "maxTemp";
+        }
+
+        else if(metric.equalsIgnoreCase("minTemp")){
+            metricTable = "Temperature";
+            valueColumn = "minTemp";
+        }
+
+        else if(metric.equalsIgnoreCase("evaporation")){
+            metricTable = "Evaporation";
+            valueColumn = "evaporation";
+        }
+
+        else if(metric.equalsIgnoreCase("precipitation")){
+            metricTable = "Precipitation";
+            valueColumn = "precipitation";
+        }
+
+        else if(metric.equalsIgnoreCase("sunshine")){
+            metricTable = "Sunshine";
+            valueColumn = "sunshine";
+        }
+
+        else if(metric.equalsIgnoreCase("okta")){
+            metricTable = "Cloud";
+            valueColumn = metric + time;
+        }
+        
+        else if(metric.equalsIgnoreCase("humid")){
+            metricTable = "Humidity";
+            valueColumn = metric + time;
+        }
+
+        else{
+            return summaries;
+        }
+
+String query = 
+    "SELECT l.region, COUNT(l.site) AS station_count, AVG(v." + valueColumn + ") AS avg_metric " +
+    "FROM location l " +
+    "JOIN " + metricTable + " v ON l.site = v.location " +
+    "WHERE l.state = ? AND l.lat BETWEEN ? AND ? " +
+    "GROUP BY l.region " +
+    "ORDER BY l.region;";
+
+
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setQueryTimeout(30);
+
+        stmt.setString(1, state);
+        stmt.setDouble(2, startLat);
+        stmt.setDouble(3, endLat);
+
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            summaries.add(new RegionSummary(
+                rs.getString("region"),
+                rs.getInt("station_count"),
+                rs.getDouble("avg_metric")
+            ));
+        }
+
+        stmt.close();
+    } catch(SQLException e) {
+        System.err.println("getRegionalSummary Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    return summaries;
+}
+
 }

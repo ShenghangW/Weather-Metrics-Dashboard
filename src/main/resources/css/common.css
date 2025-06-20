@@ -185,17 +185,17 @@
 .slide-content h2 {
     margin-bottom: 10px;
     font-size: 24px;
-    color: black;
+    color: white;
 }
 
 .slide-content p {
     font-size: 18px;
-    color:  #333;
+    color:  white;
 }
 
 .slide.rainfall-bg{
   background-image: url('Rainfall-image.png');
-  object-fit: scale-down;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: white;
@@ -203,10 +203,17 @@
 
 .slide.coldest-bg{
   background-image: url('Coldest-image.png');
-  object-fit: scale-down;
+ background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  color: black;
+  color: white;
+}
+.slide.year-image{
+    background-image: url('year-image.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
 }
 
 @keyframes slide {
