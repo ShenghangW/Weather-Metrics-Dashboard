@@ -303,7 +303,7 @@
                 Select l.site, l.name as Weather_Station, p.precipitation as precipitation, precipqual as flag
                 from precipitation as p
                 join location as l on p.location = l.site
-                where p.precipitation is not null AND TRIM(p.precipitation) <> '' 
+                where p.precipitation is not null AND TRIM(p.precipitation) <> ''
                 AND flag == 'Y'
                 order by precipitation desc
                 limit 1;
@@ -348,7 +348,7 @@
         }
         else if ("Cloud".equals(metric)) {
             tableName = "cloud";
-            actualColumn = "cloud_okta" + time;
+            actualColumn = "okta" + time;
         }
         else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
             tableName = "temperature";
@@ -366,7 +366,7 @@
 
         while(rs.next()) {
             results.add(new MetricData(
-                rs.getString("metric_value"),  // Use the alias
+                rs.getString("metric_value"),
                 rs.getString("YMD"),
                 rs.getString("Location")
             ));
@@ -404,7 +404,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         }
         else if ("Cloud".equals(metric)) {
             tableName = "cloud";
-            actualColumn = "cloud_okta" + time;
+            actualColumn = "okta" + time;
         }
         else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
             tableName = "temperature";
@@ -414,8 +414,8 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         String query = "SELECT L.state, COALESCE(SUM(x." + actualColumn + "), 0) AS total_value " +
                         "FROM Location L " +
                         "LEFT JOIN " + tableName + " x ON L.site = x.Location " +
-                        "WHERE L.site BETWEEN '" + startStation + "' AND '" + endStation + "' " +
                         "AND x.YMD BETWEEN '" + startDate + "' AND '" + endDate + "' " +
+                        "WHERE L.site BETWEEN '" + startStation + "' AND '" + endStation + "' " +
                         "GROUP BY L.state " +
                         "ORDER BY total_value " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
 
@@ -426,7 +426,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         while(rs.next()) {
             sum.add(new StateSummary(
                 rs.getString("state"),
-                rs.getDouble("total_value")  // Use the alias
+                rs.getDouble("total_value")
             ));
         }
         stmt.close();
