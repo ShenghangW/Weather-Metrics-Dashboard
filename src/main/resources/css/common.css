@@ -185,17 +185,17 @@
 .slide-content h2 {
     margin-bottom: 10px;
     font-size: 24px;
-    color: black;
+    color: white;
 }
 
 .slide-content p {
     font-size: 18px;
-    color:  #333;
+    color:  white;
 }
 
 .slide.rainfall-bg{
   background-image: url('Rainfall-image.png');
-  object-fit: scale-down;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: white;
@@ -203,10 +203,17 @@
 
 .slide.coldest-bg{
   background-image: url('Coldest-image.png');
-  object-fit: scale-down;
+ background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  color: black;
+  color: white;
+}
+.slide.year-image{
+    background-image: url('year-image.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
 }
 
 @keyframes slide {
@@ -344,17 +351,17 @@
 
 .persona-1 .persona-image {
     background-image: url('Andrew.png');
-    border: 4px solid #4e89ae;
+    border: 4px solid;
 }
 
 .persona-2 .persona-image {
     background-image: url('Julia.png');
-    border: 4px solid #ffa372;
+    border: 4px solid;
 }
 
 .persona-3 .persona-image {
     background-image: url('Maria.png');
-    border: 4px solid #ed6663;
+    border: 4px solid;
 }
 
 
@@ -549,22 +556,47 @@
 }
 
 .form-group select {
-  width: 5%;
+  width: 8%;
   height: 5%;
-  /* font: 1.2em */
+  min-width: auto;
 }
 
 .form-group input {
   height: 5%;
-  width: 5%;
-  font: 1.2em
+  width: 9%;
+  min-width: auto;
 }
 
-.font-group button {
-  width: 10%;
-  height: 5%;
+.form-group button {
+  margin-top: 30px;
+  width: 5%;
+  height: 8%;
+  font-size: 5px;
 }
 
 .selected-params {
   padding-right: 50px;
+}
+
+.form-heading2 {
+  font-size: 2.5em;
+    text-align: Left;
+    margin-bottom: 40px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.result-head2 {
+  font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.result-subhead {
+  font-size: 1.2em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 40px;
 }

@@ -7,8 +7,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+    import java.sql.SQLException;
+    import java.sql.Statement;
+import java.sql.Time;
 
 /**
  * Class for Managing the JDBC Connection to a SQLLite Database.
@@ -306,14 +307,14 @@ public class JDBCConnection {
             stmt.setQueryTimeout(30);
 
             String query = """
-                        Select l.site, l.name as Weather_Station, p.precipitation as precipitation, precipqual as flag
-                        from precipitation as p
-                        join location as l on p.location = l.site
-                        where p.precipitation is not null AND TRIM(p.precipitation) <> ''
-                        AND flag == 'Y'
-                        order by precipitation desc
-                        limit 1;
-                    """;
+                Select l.site, l.name as Weather_Station, p.precipitation as precipitation, precipqual as flag
+                from precipitation as p
+                join location as l on p.location = l.site
+                where p.precipitation is not null AND TRIM(p.precipitation) <> ''
+                AND flag == 'Y'
+                order by precipitation desc
+                limit 1;
+            """;
 
             ResultSet rs = stmt.executeQuery(query);
             if (rs.next()) {
@@ -344,20 +345,22 @@ public class JDBCConnection {
         ArrayList<MetricData> results = new ArrayList<>();
         Connection conn = null;
 
-        try {
-            conn = DriverManager.getConnection(DATABASE);
-            String tableName = metric.toLowerCase();
-            String actualColumn = metric;
-
-            if ("Humidity".equals(metric)) {
-                tableName = "humidity";
-                actualColumn = "humid" + time;
-            } else if ("Cloud".equals(metric)) {
-                tableName = "cloud";
-                actualColumn = "cloud_okta" + time;
-            } else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
-                tableName = "temperature";
-            }
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        String tableName = metric.toLowerCase();
+        String actualColumn = metric;
+        
+        if ("Humidity".equals(metric)) {
+            tableName = "humidity";
+            actualColumn = "humid" + time;
+        }
+        else if ("Cloud".equals(metric)) {
+            tableName = "cloud";
+            actualColumn = "okta" + time;
+        }
+        else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
+            tableName = "temperature";
+        }
 
             String query = "SELECT Location, YMD, " + actualColumn + " AS metric_value " +
                     "FROM " + tableName + " " +
@@ -369,82 +372,85 @@ public class JDBCConnection {
             ResultSet rs = stmt.executeQuery(query);
             stmt.setQueryTimeout(30);
 
-            while (rs.next()) {
-                results.add(new MetricData(
-                        rs.getString("metric_value"), // Use the alias
-                        rs.getString("YMD"),
-                        rs.getString("Location")));
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println("MetricData Error: " + e);
-            e.printStackTrace();
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
+        while(rs.next()) {
+            results.add(new MetricData(
+                rs.getString("metric_value"),
+                rs.getString("YMD"),
+                rs.getString("Location")
+            ));
         }
-        return results;
+        stmt.close();
+    } catch(SQLException e) {
+        System.err.println("MetricData Error: " + e);
+        e.printStackTrace();
+    } finally {
+        try {
+            if(conn != null) {
+                conn.close();
+            }
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
     }
+    return results;
+}
 
     public ArrayList<StateSummary> getStateSummary(String metric, String startStation, String endStation,
             String startDate, String endDate, String order, String time) {
         ArrayList<StateSummary> sum = new ArrayList<>();
         Connection conn = null;
 
-        try {
-            conn = DriverManager.getConnection(DATABASE);
-            String tableName = metric.toLowerCase();
-            String actualColumn = metric; // Default to metric name
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        String tableName = metric.toLowerCase();
+        String actualColumn = metric;  // Default to metric name
+        
+        // Handle special cases
+        if ("Humidity".equals(metric)) {
+            tableName = "humidity";
+            actualColumn = "humid" + time;
+        }
+        else if ("Cloud".equals(metric)) {
+            tableName = "cloud";
+            actualColumn = "okta" + time;
+        }
+        else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
+            tableName = "temperature";
+        }
 
-            // Handle special cases
-            if ("Humidity".equals(metric)) {
-                tableName = "humidity";
-                actualColumn = "humid" + time;
-            } else if ("Cloud".equals(metric)) {
-                tableName = "cloud";
-                actualColumn = "cloud_okta" + time;
-            } else if (metric.equals("AvgTemp") || metric.equals("MinTemp") || metric.equals("MaxTemp")) {
-                tableName = "temperature";
-            }
-
-            // Build query with correct column reference
-            String query = "SELECT L.state, COALESCE(SUM(x." + actualColumn + "), 0) AS total_value " +
-                    "FROM Location L " +
-                    "LEFT JOIN " + tableName + " x ON L.site = x.Location " +
-                    "WHERE L.site BETWEEN '" + startStation + "' AND '" + endStation + "' " +
-                    "AND x.YMD BETWEEN '" + startDate + "' AND '" + endDate + "' " +
-                    "GROUP BY L.state " +
-                    "ORDER BY total_value " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
+        // Build query with correct column reference
+        String query = "SELECT L.state, COALESCE(SUM(x." + actualColumn + "), 0) AS total_value " +
+                        "FROM Location L " +
+                        "LEFT JOIN " + tableName + " x ON L.site = x.Location " +
+                        "AND x.YMD BETWEEN '" + startDate + "' AND '" + endDate + "' " +
+                        "WHERE L.site BETWEEN '" + startStation + "' AND '" + endStation + "' " +
+                        "GROUP BY L.state " +
+                        "ORDER BY total_value " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             stmt.setQueryTimeout(30);
 
-            while (rs.next()) {
-                sum.add(new StateSummary(
-                        rs.getString("state"),
-                        rs.getDouble("total_value") // Use the alias
-                ));
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println("StateSummary Error: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
+        while(rs.next()) {
+            sum.add(new StateSummary(
+                rs.getString("state"),
+                rs.getDouble("total_value")
+            ));
         }
-        return sum;
+        stmt.close();
+    } catch(SQLException e) {
+        System.err.println("StateSummary Error: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if(conn != null) {
+                conn.close();
+            }
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return sum;
     }
 
     public ArrayList<String> getStates() {
@@ -479,8 +485,7 @@ public class JDBCConnection {
         return states;
     }
 
-    public ArrayList<Station> getfilteredStations(String State, double startLat, double endLat, String metric,
-            String sortBy) {
+    public ArrayList<Station> getfilteredStations(String State, double startLat, double endLat, String metric, String sortBy, String time){
         ArrayList<Station> station = new ArrayList<>();
 
         Connection conn = null;
@@ -498,7 +503,7 @@ public class JDBCConnection {
             valueColumn = "minTemp";
         }
 
-        else if (metric.equalsIgnoreCase("evaporation")) {
+        else if(metric.equalsIgnoreCase("evaporation")){
             metricTable = "Evaporation";
             valueColumn = "evaporation";
         }
@@ -513,14 +518,14 @@ public class JDBCConnection {
             valueColumn = "sunshine";
         }
 
-        else if (metric.equalsIgnoreCase("cloud")) {
+        else if(metric.equalsIgnoreCase("okta")){
             metricTable = "Cloud";
-            valueColumn = "okta";
+            valueColumn = metric + time;
         }
-
-        else if (metric.equalsIgnoreCase("humidity")) {
+        
+        else if(metric.equalsIgnoreCase("humid")){
             metricTable = "Humidity";
-            valueColumn = "humid";
+            valueColumn = metric + time;
         }
 
         else {
@@ -529,11 +534,11 @@ public class JDBCConnection {
         try {
             conn = DriverManager.getConnection(DATABASE);
 
-            String query = "SELECT Distinct l.site, l.name, l.state, l.lat, l.longt, v." + valueColumn +
-                    " FROM location as l JOIN " + metricTable + " as v ON l.site = v.location " +
-                    " WHERE l.state = ? AND l.lat BETWEEN ? AND ? " +
-                    " GROUP BY l.site " +
-                    " ORDER BY " + (sortBy.equals("latitude") ? "l.lat" : "l." + sortBy);
+            String query = "SELECT l.site, l.name, l.state, l.lat, l.longt, v.[" + valueColumn + "]" +
+                 " FROM location as l JOIN "+ metricTable +" as v ON l.site = v.location " +
+                 " WHERE l.state = ? AND l.lat BETWEEN ? AND ? " +
+                 " GROUP BY l.site " +
+                 " ORDER BY " + (sortBy.equals("latitude") ? "l.lat" : "l." + sortBy);
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setQueryTimeout(30);
 
@@ -566,4 +571,94 @@ public class JDBCConnection {
         }
         return station;
     }
+
+    public ArrayList<RegionSummary> getRegionalSummary(String state, double startLat, double endLat, String metric, String time) {
+    ArrayList<RegionSummary> summaries = new ArrayList<>();
+    Connection conn = null;
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+         
+        String metricTable = "";
+        String valueColumn = "";
+
+        if(metric.equalsIgnoreCase("maxTemp")){
+            metricTable = "Temperature";
+            valueColumn = "maxTemp";
+        }
+
+        else if(metric.equalsIgnoreCase("minTemp")){
+            metricTable = "Temperature";
+            valueColumn = "minTemp";
+        }
+
+        else if(metric.equalsIgnoreCase("evaporation")){
+            metricTable = "Evaporation";
+            valueColumn = "evaporation";
+        }
+
+        else if(metric.equalsIgnoreCase("precipitation")){
+            metricTable = "Precipitation";
+            valueColumn = "precipitation";
+        }
+
+        else if(metric.equalsIgnoreCase("sunshine")){
+            metricTable = "Sunshine";
+            valueColumn = "sunshine";
+        }
+
+        else if(metric.equalsIgnoreCase("okta")){
+            metricTable = "Cloud";
+            valueColumn = metric + time;
+        }
+        
+        else if(metric.equalsIgnoreCase("humid")){
+            metricTable = "Humidity";
+            valueColumn = metric + time;
+        }
+
+        else{
+            return summaries;
+        }
+
+String query = 
+    "SELECT l.region, COUNT(l.site) AS station_count, AVG(v." + valueColumn + ") AS avg_metric " +
+    "FROM location l " +
+    "JOIN " + metricTable + " v ON l.site = v.location " +
+    "WHERE l.state = ? AND l.lat BETWEEN ? AND ? " +
+    "GROUP BY l.region " +
+    "ORDER BY l.region;";
+
+
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setQueryTimeout(30);
+
+        stmt.setString(1, state);
+        stmt.setDouble(2, startLat);
+        stmt.setDouble(3, endLat);
+
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            summaries.add(new RegionSummary(
+                rs.getString("region"),
+                rs.getInt("station_count"),
+                rs.getDouble("avg_metric")
+            ));
+        }
+
+        stmt.close();
+    } catch(SQLException e) {
+        System.err.println("getRegionalSummary Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    return summaries;
+}
+
 }

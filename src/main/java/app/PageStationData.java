@@ -17,6 +17,13 @@ public class PageStationData implements Handler {
         html += PageIndex.navbar;
 
         html += "<div class='content'><h1>Weather Stations</h1>";
+        html += """
+            <h2>Welcome to the Weather Station Data Explorer</h2>
+            <p>Use the form below to search for Australian weather stations based on region, latitude range, and specific environmental metrics.</p>
+            <p>Whether you are interested in cloud coverage, humidity at different times of day, or long-term precipitation trends—this page helps you compare station-level data easily.</p>
+            <p>All values are presented with clarity, and missing entries will be marked as <strong>'No data'</strong>.</p>
+            """;
+
 
         JDBCConnection jdbc = new JDBCConnection();
         ArrayList<String> states = jdbc.getStates();
@@ -68,7 +75,7 @@ public class PageStationData implements Handler {
                 <form action="/searchResults.html" method="post">
                 <label for="state">Select a state:</label>
                 <select name="state" required>
-                <option value="" disabled selected>Choose a state</option>
+                <option value="" disabled selected>Choose a state</option><br><br>
                 """;
             for (String state : states) {
                 html += "<option value='" + state + "'>" + state + "</option>";
@@ -86,6 +93,10 @@ public class PageStationData implements Handler {
                         <option value="sunshine">Sunshine</option>
                         <option value="okta">Cloud Coverage</option>
                         </select><br><br>
+                        <div id="time-container" style="display:none;">
+                        <label for="time">Select time:</label>
+                        <select name="time" id="time"></select>
+                        </div>
                         <label for="startLat">Starting Latitude:</label>
                         <input type="number" name="startLat" step="0.01" required><br><br> 
                         <label for="endLat">Ending Latitude:</label>
@@ -105,21 +116,25 @@ public class PageStationData implements Handler {
                 double endLat = Double.parseDouble(context.formParam("endLat"));
                 String metric = context.formParam("metric");
                 String sortBy = context.formParam("sortBy");
-                ArrayList<Station> stationList = jdbc.getfilteredStations(state, startLat, endLat, metric, sortBy);
+                String time = context.formParam("time");
+                ArrayList<Station> stationList = jdbc.getfilteredStations(state, startLat, endLat, metric, sortBy, time);
                 
-                    System.out.println("Form Parameters:");
-    System.out.println("State: " + state);
-    System.out.println("StartLat: " + startLat);
-    System.out.println("EndLat: " + endLat);
-    System.out.println("Metric: " + metric);
-    System.out.println("SortBy: " + sortBy);
-
+                String displayName = switch (metric.toLowerCase()) {
+                    case "maxtemp" -> "Maximum Temperature";
+                    case "mintemp" -> "Minimum Temperature";
+                    case "evaporation" -> "Evaporation";
+                    case "precipitation" -> "Precipitation";
+                    case "sunshine" -> "Sunshine";
+                    case "humid" -> "Humidity";
+                    case "okta" -> "Cloud Coverage";
+                    default -> metric;
+                };
 
                 if(!stationList.isEmpty()){
                      html += "<table class = 'team-table'>";
                            
 
-                html += "<tr><th>Site</th><th>Name</th><th>State</th><th>Latitude</th><th>Longitude</th><th>" + metric + "</th></tr>";
+                html += "<tr><th>Site</th><th>Name</th><th>State</th><th>Latitude</th><th>Longitude</th><th>" + displayName + "</th></tr>";
                 
 
                 for(Station s : stationList){
@@ -138,11 +153,31 @@ public class PageStationData implements Handler {
                 }
 
                  html += "</table>";
+               
+
+                ArrayList<RegionSummary> regionSummaries = jdbc.getRegionalSummary(state, startLat, endLat, metric, time);
+
+                html += "<h3>Summary by Region</h3>";
+                if (!regionSummaries.isEmpty()) {
+                    html += "<table class='team-table'>";
+                    html += "<tr><th>Region</th><th>Number of Stations</th><th>Average " + displayName + "</th></tr>";
+                
+                    for (RegionSummary rsum : regionSummaries) {
+                        html += "<tr>" +
+                                "<td>" + rsum.getRegionName() + "</td>" +
+                                "<td>" + rsum.getStationCount() + "</td>" +
+                                "<td>" + String.format("%.2f", rsum.getAverageMetric()) + "</td>" +
+                                "</tr>";
+                    }
+
+                html += "</table>";
+            } else {
+                html += "<p>No regional summary available for these conditions.</p>";
+            }
             html += "<a href='/search.html'>Back</a>";
             }
 
             html += "</div><div class='footer'><p>Weather Report Project 2025</p></div></body></html>";
             context.html(html);
         }
-        
 }

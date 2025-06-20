@@ -88,7 +88,7 @@ public class PageIndex implements Handler {
         // Add HTML for the page content
         html += "<div class='slide-show'>" +
         "<div class='slides'>" +
-        "<div class='slide'><div class='slide-content'>" +
+        "<div class='slide year-image'><div class='slide-content'>" +
         "<h2>Year Range</h2><p>" + yearRange + "</p>" +
         "</div></div>" +
 

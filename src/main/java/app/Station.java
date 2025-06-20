@@ -18,6 +18,8 @@ public class Station {
         this.metric = metric;
 
     }
+    
+
 
     // Getters
     public String getSite() { return site; }
@@ -25,5 +27,21 @@ public class Station {
     public String getState() { return state;}
     public double getLat() { return latitude; }
     public double getlongt() { return longitude;}
-    public String getmetric() { return metric;}
+    public String getmetric() {
+         if(metric==null || metric.trim().isEmpty()){
+            return "No Data";
+         }
+         return getspecialMetric(metric);
+        }
+
+        public String getspecialMetric(String metric){
+        switch (metric.toLowerCase()) {
+            case "okta":
+                return "Cloud Coverage";
+            case "humid":
+                return "Relative Humidity";
+            default:
+                return metric;
+        }
+    }
 }
