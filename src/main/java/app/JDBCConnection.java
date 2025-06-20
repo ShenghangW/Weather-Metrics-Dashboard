@@ -1,12 +1,15 @@
     package app;
 
+import java.lang.reflect.Array;
     import java.util.ArrayList;
 
     import java.sql.Connection;
     import java.sql.DriverManager;
-    import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
     import java.sql.SQLException;
     import java.sql.Statement;
+import java.sql.Time;
 
     /**
      * Class for Managing the JDBC Connection to a SQLLite Database.
@@ -320,7 +323,7 @@
 
             stmt.close();
         } catch (SQLException e) {
-            System.err.println("getFormattedMostRainfallStationName Error: " + e.getMessage());
+            System.err.println("getMostRainfallStationName Error: " + e.getMessage());
         } finally {
             try {
                 if (conn != null) conn.close();
@@ -443,5 +446,123 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         }
     }
     return sum;
+    }
+
+
+        public ArrayList<String> getStates() {
+        ArrayList<String> states = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(DATABASE);
+            Statement stmt = conn.createStatement();
+            stmt.setQueryTimeout(30);
+
+            String query = """
+                    Select Distinct state
+                    from location
+                    order by state;                                        
+                                        """;
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                states.add(rs.getString("state"));
+            }
+            stmt.close();
+        } catch(SQLException e) {
+            System.err.println("GetStates Error: " + e.getMessage());
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch(SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return states;
+    }
+
+    public ArrayList<Station> getfilteredStations(String State, double startLat, double endLat, String metric, String sortBy, String time){
+        ArrayList<Station> station = new ArrayList<>();
+
+        Connection conn = null;
+        
+        String metricTable = "";
+        String valueColumn = "";
+
+        if(metric.equalsIgnoreCase("maxTemp")){
+            metricTable = "Temperature";
+            valueColumn = "maxTemp";
+        }
+
+        else if(metric.equalsIgnoreCase("minTemp")){
+            metricTable = "Temperature";
+            valueColumn = "minTemp";
+        }
+
+        else if(metric.equalsIgnoreCase("evaporation")){
+            metricTable = "Evaporation";
+            valueColumn = "evaporation";
+        }
+
+        else if(metric.equalsIgnoreCase("precipitation")){
+            metricTable = "Precipitation";
+            valueColumn = "precipitation";
+        }
+
+        else if(metric.equalsIgnoreCase("sunshine")){
+            metricTable = "Sunshine";
+            valueColumn = "sunshine";
+        }
+
+        else if(metric.equalsIgnoreCase("okta")){
+            metricTable = "Cloud";
+            valueColumn = metric + time;
+        }
+        
+        else if(metric.equalsIgnoreCase("humid")){
+            metricTable = "Humidity";
+            valueColumn = metric + time;
+        }
+
+        else{
+            return station;
+        }
+        try{
+         conn = DriverManager.getConnection(DATABASE);
+
+            String query = "SELECT l.site, l.name, l.state, l.lat, l.longt, v.[" + valueColumn + "]" +
+                 " FROM location as l JOIN "+ metricTable +" as v ON l.site = v.location " +
+                 " WHERE l.state = ? AND l.lat BETWEEN ? AND ? " +
+                 " GROUP BY l.site " +
+                 " ORDER BY " + (sortBy.equals("latitude") ? "l.lat" : "l." + sortBy);
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setQueryTimeout(30);
+            
+            stmt.setString(1, State);
+            stmt.setDouble(2, startLat);
+            stmt.setDouble(3, endLat);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String site = rs.getString("site");
+                String name = rs.getString("name");
+                String state = rs.getString("state");
+                double latitude = rs.getDouble("lat");
+                double longitude = rs.getDouble("longt");
+                String value = rs.getString(valueColumn);
+                
+                station.add(new Station(site, name, state, latitude, longitude, value));
+            }
+            stmt.close();
+        } catch(SQLException e) {
+            System.err.println("GetData Error: " + e.getMessage());
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch(SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        return station;
     }
 }

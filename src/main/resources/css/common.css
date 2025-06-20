@@ -176,31 +176,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 100px;
     box-sizing: border-box;
-    text-align: center;
+    text-align: center; 
     background-color: #f2f2f2;
 }
 
 .slide-content h2 {
     margin-bottom: 10px;
     font-size: 24px;
-    color: #333;
+    color: black;
 }
 
 .slide-content p {
     font-size: 18px;
-    color: #555;
+    color:  #333;
 }
 
-.rainfall-bg {
-    background-image: url(images/Rainfall-image.png);
-    object-fit: cover;
+.slide.rainfall-bg{
+  background-image: url('Rainfall-image.png');
+  object-fit: scale-down;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
 }
 
-.coldest-bg {
-    background-image: url(images/Coldest-image.png);
-    object-fit: cover;
+.slide.coldest-bg{
+  background-image: url('Coldest-image.png');
+  object-fit: scale-down;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: black;
 }
 
 @keyframes slide {
