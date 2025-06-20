@@ -11,6 +11,7 @@ public class PageSearchMetrics implements Handler {
     public void handle(Context context) throws Exception {
         String html = "<html><head><title>Metric Explorer</title>"
                 + "<link rel='stylesheet' type='text/css' href='common.css' />"
+
                 + "<script>"
                 + "function updateTimeOptions() {"
                 + "  const metric = document.getElementById('metric').value;"
@@ -37,16 +38,21 @@ public class PageSearchMetrics implements Handler {
                 + "  updateTimeOptions();"
                 + "});"
                 + "</script>"
+
                 + "</head><body>"
+
                 + PageIndex.navbar
+
                 + "<br>"
                 + "<div class='pageRef'>"
                     + "<a href='/'>Home/</a>"
                     + "<a href='metricExplorer.html'>Metric Explorer</a>"
                 + "</div>"
+
                 + "<div><h1 class='metricExplorerHeader'>Metric Explorer</h1></div>"
                 + "<div class='content'>"
-                + "<h2>Explore metric across various Stations</h2>"
+                + "<h2 class='form-heading2'>Explore a Metric Across Various Stations</h2>"
+
                 + "<form action='/metricExplorer.html' method='POST'>"
                 +   "<div class='form-group'>"
                 +     "<label for='metric'>Select a Climate Metric:</label>"
@@ -55,27 +61,30 @@ public class PageSearchMetrics implements Handler {
                 +       "<option value='Evaporation'>Evaporation</option>"
                 +       "<option value='MinTemp'>Min Temperature</option>"
                 +       "<option value='MaxTemp'>Max Temperature</option>"
-                +       "<option value='AvgTemp'>Avg Temperature</option>"
                 +       "<option value='Humidity'>Humidity</option>"
                 +       "<option value='Sunshine'>Sunshine</option>"
                 +       "<option value='Cloud'>Cloud Coverage</option>"
                 +     "</select>"
                 +   "</div>"
+
                 +   "<div class='form-group'>"
                 +     "<label for='startStation'>Select Station ID From:</label>"
                 +     "<input type='number' name='startStation' id='startStation' placeholder='Select from 1006' required>"
                 +     "<label for='endStation'> to </label>"
                 +     "<input type='number' name='endStation' id='endStation' placeholder='Select up to 300004' required>"
                 +   "</div>"
+
                 +   "<div class='form-group'>"
                 +     "<label>Date Range</label>"
                 +     "<input type='date' name='startDate' required> to "
                 +     "<input type='date' name='endDate' required>"
                 +   "</div>"
+
                 +   "<div id='time-container' style='display:none;' class='form-group'>"
                 +     "<label for='time'>Select Observation Time:</label>"
                 +     "<select name='time' id='time'></select>"
                 +   "</div>"
+
                 +   "<div class='form-group'>"
                 +     "<label for='order'>Order by</label>"
                 +     "<select name='order' id='order' required>"
@@ -83,7 +92,8 @@ public class PageSearchMetrics implements Handler {
                 +       "<option value='Desc'>Descending</option>"
                 +     "</select>"
                 +   "</div>"
-                +   "<button type='submit'>Analyse Data</button>"
+                + "<br>"
+                +   "<button class='form-group' type='submit'>Analyse Metric</button>"
                 + "</form>";
 
         if (context.method().equals("POST")) {
@@ -101,14 +111,15 @@ public class PageSearchMetrics implements Handler {
             ArrayList<MetricData> data = jdbc.getMetricData(metric, startStation, endStation, startDate, endDate, order, time);
 
             if(!data.isEmpty()) {
-                html += "<h2 class='head2'>Results for " + metric + ":</h2>"
+                html += "<h2 class='result-head2'>Results for " + metric + ":</h2>"
+                        +"<h3 class='result-subhead'>NOTE: The Total Figure of " + metric + " in ALL States based on the Station ID's Selected is Locat ed at the Bottom of the Page!</h3>"
                         + "<table class='team-Table'><tr>"
                         + "<th>Station ID</th><th>Date</th><th>" + metric + "</th>"
                         + "</tr>";
 
                 for(MetricData entry : data) {
                     html += String.format(
-                        "<tr><td>%s</td><td>%s</td><td>%s</td></tr>", 
+                        "<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
                         entry.getLocation(), entry.getDate(), entry.getMetricValue()
                     );
                 }
@@ -123,7 +134,7 @@ public class PageSearchMetrics implements Handler {
 
                     for(StateSummary entry : stateResults) {
                         html += String.format(
-                            "<tr><td>%s</td><td>%.2f</td></tr>", 
+                            "<tr><td>%s</td><td>%.2f</td></tr>",
                             entry.getState(), entry.getTotalValue()
                         );
                     }
