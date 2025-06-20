@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
     import java.sql.SQLException;
     import java.sql.Statement;
+import java.sql.Time;
 
     /**
      * Class for Managing the JDBC Connection to a SQLLite Database.
@@ -479,7 +480,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         return states;
     }
 
-    public ArrayList<Station> getfilteredStations(String State, double startLat, double endLat, String metric, String sortBy){
+    public ArrayList<Station> getfilteredStations(String State, double startLat, double endLat, String metric, String sortBy, String time){
         ArrayList<Station> station = new ArrayList<>();
 
         Connection conn = null;
@@ -496,7 +497,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
             metricTable = "Temperature";
             valueColumn = "minTemp";
         }
-        
+
         else if(metric.equalsIgnoreCase("evaporation")){
             metricTable = "Evaporation";
             valueColumn = "evaporation";
@@ -512,14 +513,14 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
             valueColumn = "sunshine";
         }
 
-        else if(metric.equalsIgnoreCase("cloud")){
+        else if(metric.equalsIgnoreCase("okta")){
             metricTable = "Cloud";
-            valueColumn = "okta";
+            valueColumn = metric + time;
         }
         
-        else if(metric.equalsIgnoreCase("humidity")){
+        else if(metric.equalsIgnoreCase("humid")){
             metricTable = "Humidity";
-            valueColumn = "humid";
+            valueColumn = metric + time;
         }
 
         else{
@@ -528,7 +529,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         try{
          conn = DriverManager.getConnection(DATABASE);
 
-            String query = "SELECT Distinct l.site, l.name, l.state, l.lat, l.longt, v." + valueColumn +
+            String query = "SELECT l.site, l.name, l.state, l.lat, l.longt, v.[" + valueColumn + "]" +
                  " FROM location as l JOIN "+ metricTable +" as v ON l.site = v.location " +
                  " WHERE l.state = ? AND l.lat BETWEEN ? AND ? " +
                  " GROUP BY l.site " +
