@@ -3,11 +3,10 @@ package app;
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
 
-
 /**
  * Main Application Class.
  * <p>
- * Running this class as regular java application will start the 
+ * Running this class as regular java application will start the
  * Javalin HTTP Server and our web application.
  *
  * @author Timothy Wiley, 2023. email: timothy.wiley@rmit.edu.au
@@ -15,22 +14,21 @@ import io.javalin.core.util.RouteOverviewPlugin;
  */
 public class App {
 
-    public static final int         JAVALIN_PORT    = 7001;
-    public static final String      CSS_DIR         = "css/";
-    public static final String      IMAGES_DIR      = "images/";
+    public static final int JAVALIN_PORT = 7001;
+    public static final String CSS_DIR = "css/";
+    public static final String IMAGES_DIR = "images/";
 
     public static void main(String[] args) {
         // Create our HTTP server and listen in port 7000
         Javalin app = Javalin.create(config -> {
             config.registerPlugin(new RouteOverviewPlugin("/help/routes"));
-            
+
             // Uncomment this if you have files in the CSS Directory
             config.addStaticFiles(CSS_DIR);
 
             // Uncomment this if you have files in the Images Directory
             config.addStaticFiles(IMAGES_DIR);
         }).start(JAVALIN_PORT);
-
 
         // Configure Web Routes
         configureRoutes(app);
@@ -46,7 +44,7 @@ public class App {
         app.get(PageDataQuality.URL, new PageDataQuality());
         app.get(PageST3A.URL, new PageST3A());
         app.get(PageST3B.URL, new PageST3B());
-        app.get(PageST3C.URL, new PageST3C());
+        app.get(PageCorrelation.URL, new PageCorrelation());
 
         // Add / uncomment POST commands for any pages that need web form POSTS
         app.post(PageIndex.URL, new PageIndex());
@@ -56,7 +54,7 @@ public class App {
         app.post(PageDataQuality.URL, new PageDataQuality());
         app.post(PageST3A.URL, new PageST3A());
         app.post(PageST3B.URL, new PageST3B());
-        app.post(PageST3C.URL, new PageST3C());
+        app.post(PageCorrelation.URL, new PageCorrelation());
     }
 
 }

@@ -1,100 +1,100 @@
-    package app;
+package app;
 
 import java.lang.reflect.Array;
-    import java.util.ArrayList;
+import java.util.ArrayList;
 
-    import java.sql.Connection;
-    import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
     import java.sql.SQLException;
     import java.sql.Statement;
 import java.sql.Time;
 
+/**
+ * Class for Managing the JDBC Connection to a SQLLite Database.
+ * Allows SQL queries to be used with the SQLLite Databse in Java.
+ *
+ * @author Santha Sumanasekara, 2021. email: santha.sumanasekara@rmit.edu.au
+ * @author Timothy Wiley, 2023. email: timothy.wiley@rmit.edu.au
+ * @author Halil Ali, 2024. email: halil.ali@rmit.edu.au
+ * @editor David Eccles, 2025 email: david.eccles@rmit.edu
+ */
+
+public class JDBCConnection {
+
+    // Name of database file (contained in database folder)
+    public static final String DATABASE = "jdbc:sqlite:database/climate.db";
+
     /**
-     * Class for Managing the JDBC Connection to a SQLLite Database.
-     * Allows SQL queries to be used with the SQLLite Databse in Java.
-     *
-     * @author Santha Sumanasekara, 2021. email: santha.sumanasekara@rmit.edu.au
-     * @author Timothy Wiley, 2023. email: timothy.wiley@rmit.edu.au
-     * @author Halil Ali, 2024. email: halil.ali@rmit.edu.au
-     * @editor David Eccles, 2025 email: david.eccles@rmit.edu
+     * This creates a JDBC Object so we can keep talking to the database
      */
+    public JDBCConnection() {
+        System.out.println("Created JDBC Connection Object");
+    }
 
-    public class JDBCConnection {
+    /**
+     * Get all of the Flag Descriptions
+     */
+    public ArrayList<FLAG> getFlags() {
+        // Create the ArrayList of FlagQuality objects to return
+        // Create an array called flags
+        ArrayList<FLAG> flags = new ArrayList<FLAG>();
 
-        // Name of database file (contained in database folder)
-        public static final String DATABASE = "jdbc:sqlite:database/climate.db";
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
 
-        /**
-         * This creates a JDBC Object so we can keep talking to the database
-         */
-        public JDBCConnection() {
-            System.out.println("Created JDBC Connection Object");
-        }
+        try {
+            // Connect to JDBC database
+            connection = DriverManager.getConnection(DATABASE);
 
-        /**
-         * Get all of the Flag Descriptions
-         */
-        public ArrayList<FLAG> getFlags() {
-            // Create the ArrayList of FlagQuality objects to return
-            // Create an array called flags
-            ArrayList<FLAG> flags = new ArrayList<FLAG>();
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            // put in a timeout incase the db is not running
+            statement.setQueryTimeout(30);
 
-            // Setup the variable for the JDBC connection
-            Connection connection = null;
+            // The SQL Query to be executed
+            String query = "SELECT * FROM FlagQuality";
 
-            try {
-                // Connect to JDBC database
-                connection = DriverManager.getConnection(DATABASE);
+            // Put the SQL results into a result set
+            ResultSet results = statement.executeQuery(query);
 
-                // Prepare a new SQL Query & Set a timeout
-                Statement statement = connection.createStatement();
-                // put in a timeout incase the db is not running
-                statement.setQueryTimeout(30);
+            // Process all of the results
+            while (results.next()) {
+                // Lookup the columns we need
+                String flagtype = results.getString("flag");
+                String description = results.getString("description");
 
-                // The SQL Query to be executed 
-                String query = "SELECT * FROM FlagQuality";
-                
-                // Put the SQL results into a result set
-                ResultSet results = statement.executeQuery(query);
+                // Create an FLAG Object
+                FLAG flagsObj = new FLAG(flagtype, description);
 
-                // Process all of the results
-                while (results.next()) {
-                    // Lookup the columns we need
-                    String flagtype     = results.getString("flag");
-                    String description  = results.getString("description");
-
-                    // Create an FLAG Object
-                    FLAG flagsObj = new FLAG(flagtype, description);
-
-                    // Add the FLAG object to the flags array
-                    flags.add(flagsObj);
-                }
-
-                // Close the statement because we are done with it
-                statement.close();
-            } catch (SQLException e) {
-                // If there is an error, lets just pring the error
-                System.err.println(e.getMessage());
-            } finally {
-                // Safety code to cleanup
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    // connection close failed.
-                    System.err.println(e.getMessage());
-                }
+                // Add the FLAG object to the flags array
+                flags.add(flagsObj);
             }
 
-            // Finally we return all of the countries
-            return flags;
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
         }
 
-        // Add your required methods here
-        public ArrayList<Persona> getPersonas() {
+        // Finally we return all of the countries
+        return flags;
+    }
+
+    // Add your required methods here
+    public ArrayList<Persona> getPersonas() {
         ArrayList<Persona> personas = new ArrayList<>();
         Connection conn = null;
         try {
@@ -117,104 +117,106 @@ import java.sql.Time;
             System.err.println(e.getMessage());
         } finally {
             try {
-                if (conn != null) conn.close();
-            } catch(SQLException e) {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
         return personas;
     }
 
-        public ArrayList<TeamMember> getTeamMembers() {
-            ArrayList<TeamMember> teamMembers = new ArrayList<>();
-            Connection conn = null;
-            try {
-                conn = DriverManager.getConnection(DATABASE);
-                Statement stmt = conn.createStatement();
-                stmt.setQueryTimeout(30);
+    public ArrayList<TeamMember> getTeamMembers() {
+        ArrayList<TeamMember> teamMembers = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(DATABASE);
+            Statement stmt = conn.createStatement();
+            stmt.setQueryTimeout(30);
 
-                // FIXED TABLE NAME TO MATCH YOUR SCHEMA
-                String query = "SELECT name, student_id, subtask, role FROM TeamMembers";
-                ResultSet rs = stmt.executeQuery(query);
+            // FIXED TABLE NAME TO MATCH YOUR SCHEMA
+            String query = "SELECT name, student_id, subtask, role FROM TeamMembers";
+            ResultSet rs = stmt.executeQuery(query);
 
-                while (rs.next()) {
-                    String name = rs.getString("name");
-                    String studentNum = rs.getString("student_id");
-                    String subtask = rs.getString("subtask");
-                    String role = rs.getString("role");
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String studentNum = rs.getString("student_id");
+                String subtask = rs.getString("subtask");
+                String role = rs.getString("role");
 
-                    TeamMember teamMemberObj = new TeamMember(name, studentNum, subtask, role);
-                    teamMembers.add(teamMemberObj);
-                }
-                stmt.close();
-            } catch(SQLException e) {
-                System.err.println("TeamMembers Error: " + e.getMessage());
-            } finally {
-                try {
-                    if (conn != null) conn.close();
-                } catch(SQLException e) {
-                    System.err.println(e.getMessage());
-                }
+                TeamMember teamMemberObj = new TeamMember(name, studentNum, subtask, role);
+                teamMembers.add(teamMemberObj);
             }
-            return teamMembers;
-        }
-
-        public ArrayList<METADATA> getMetadata() {
-            // Create the ArrayList of FlagQuality objects to return
-            // Create an array called flags
-            ArrayList<METADATA> metadata = new ArrayList<METADATA>();
-
-            // Setup the variable for the JDBC connection
-            Connection connection = null;
-
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println("TeamMembers Error: " + e.getMessage());
+        } finally {
             try {
-                // Connect to JDBC database
-                connection = DriverManager.getConnection(DATABASE);
-
-                // Prepare a new SQL Query & Set a timeout
-                Statement statement = connection.createStatement();
-                // put in a timeout incase the db is not running
-                statement.setQueryTimeout(30);
-
-                // The SQL Query to be executed 
-                String query = "SELECT * FROM Metadata";
-                
-                // Put the SQL results into a result set
-                ResultSet results = statement.executeQuery(query);
-
-                // Process all of the results
-                while (results.next()) {
-                    // Lookup the columns we need
-                    String field     = results.getString("field");
-                    String description  = results.getString("description");
-
-                    // Create an FLAG Object
-                    METADATA metadataObj = new METADATA(field, description);
-
-                    // Add the FLAG object to the flags array
-                    metadata.add(metadataObj);
-                }
-
-                // Close the statement because we are done with it
-                statement.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException e) {
-                // If there is an error, lets just pring the error
                 System.err.println(e.getMessage());
-            } finally {
-                // Safety code to cleanup
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    // connection close failed.
-                    System.err.println(e.getMessage());
-                }
+            }
+        }
+        return teamMembers;
+    }
+
+    public ArrayList<METADATA> getMetadata() {
+        // Create the ArrayList of FlagQuality objects to return
+        // Create an array called flags
+        ArrayList<METADATA> metadata = new ArrayList<METADATA>();
+
+        // Setup the variable for the JDBC connection
+        Connection connection = null;
+
+        try {
+            // Connect to JDBC database
+            connection = DriverManager.getConnection(DATABASE);
+
+            // Prepare a new SQL Query & Set a timeout
+            Statement statement = connection.createStatement();
+            // put in a timeout incase the db is not running
+            statement.setQueryTimeout(30);
+
+            // The SQL Query to be executed
+            String query = "SELECT * FROM Metadata";
+
+            // Put the SQL results into a result set
+            ResultSet results = statement.executeQuery(query);
+
+            // Process all of the results
+            while (results.next()) {
+                // Lookup the columns we need
+                String field = results.getString("field");
+                String description = results.getString("description");
+
+                // Create an FLAG Object
+                METADATA metadataObj = new METADATA(field, description);
+
+                // Add the FLAG object to the flags array
+                metadata.add(metadataObj);
             }
 
-            // Finally we return all of the countries
-            return metadata;
+            // Close the statement because we are done with it
+            statement.close();
+        } catch (SQLException e) {
+            // If there is an error, lets just pring the error
+            System.err.println(e.getMessage());
+        } finally {
+            // Safety code to cleanup
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed.
+                System.err.println(e.getMessage());
+            }
         }
+
+        // Finally we return all of the countries
+        return metadata;
+    }
 
     public String getYearRange() {
         String yearRange = "Unknown";
@@ -243,15 +245,16 @@ import java.sql.Time;
             System.err.println("getYearRange Error: " + e.getMessage());
         } finally {
             try {
-                if (conn != null) conn.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
         return yearRange;
-        }
+    }
 
-        public String getColdestStationName() {
+    public String getColdestStationName() {
         String result = "No data available";
         Connection conn = null;
 
@@ -261,14 +264,14 @@ import java.sql.Time;
             stmt.setQueryTimeout(30);
 
             String query = """
-                SELECT l.site, l.name AS Weather_Station, t.minTemp AS Minimum_temperature
-                FROM temperature AS t
-                JOIN location AS l ON t.location = l.site
-                WHERE t.minTemp IS NOT NULL AND TRIM(t.minTemp) <> '' 
-                AND t.mintempqual == 'Y'
-                ORDER BY t.minTemp ASC
-                LIMIT 1;
-            """;
+                        SELECT l.site, l.name AS Weather_Station, t.minTemp AS Minimum_temperature
+                        FROM temperature AS t
+                        JOIN location AS l ON t.location = l.site
+                        WHERE t.minTemp IS NOT NULL AND TRIM(t.minTemp) <> ''
+                        AND t.mintempqual == 'Y'
+                        ORDER BY t.minTemp ASC
+                        LIMIT 1;
+                    """;
 
             ResultSet rs = stmt.executeQuery(query);
             if (rs.next()) {
@@ -284,16 +287,17 @@ import java.sql.Time;
             System.err.println("getFormattedColdestStationName Error: " + e.getMessage());
         } finally {
             try {
-                if (conn != null) conn.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
 
         return result;
-        }
+    }
 
-        public String getMostRainfallStationName() {
+    public String getMostRainfallStationName() {
         String result = "No data available";
         Connection conn = null;
 
@@ -326,19 +330,20 @@ import java.sql.Time;
             System.err.println("getMostRainfallStationName Error: " + e.getMessage());
         } finally {
             try {
-                if (conn != null) conn.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
 
         return result;
-        }
+    }
 
-        public ArrayList<MetricData> getMetricData(String metric, String startStation, String endStation,
-                                            String startDate, String endDate, String order, String time) {
-    ArrayList<MetricData> results = new ArrayList<>();
-    Connection conn = null;
+    public ArrayList<MetricData> getMetricData(String metric, String startStation, String endStation,
+            String startDate, String endDate, String order, String time) {
+        ArrayList<MetricData> results = new ArrayList<>();
+        Connection conn = null;
 
     try {
         conn = DriverManager.getConnection(DATABASE);
@@ -357,15 +362,15 @@ import java.sql.Time;
             tableName = "temperature";
         }
 
-        String query = "SELECT Location, YMD, " + actualColumn + " AS metric_value " +
-                        "FROM " + tableName + " " +
-                        "WHERE Location BETWEEN '" + startStation + "' AND '" + endStation + "' " +
-                        "AND YMD BETWEEN '" + startDate + "' AND '" + endDate + "' " +
-                        "ORDER BY " + actualColumn + " " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
+            String query = "SELECT Location, YMD, " + actualColumn + " AS metric_value " +
+                    "FROM " + tableName + " " +
+                    "WHERE Location BETWEEN '" + startStation + "' AND '" + endStation + "' " +
+                    "AND YMD BETWEEN '" + startDate + "' AND '" + endDate + "' " +
+                    "ORDER BY " + actualColumn + " " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
 
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        stmt.setQueryTimeout(30);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            stmt.setQueryTimeout(30);
 
         while(rs.next()) {
             results.add(new MetricData(
@@ -390,10 +395,10 @@ import java.sql.Time;
     return results;
 }
 
-public ArrayList<StateSummary> getStateSummary(String metric, String startStation, String endStation,
-                                                String startDate, String endDate, String order, String time) {
-    ArrayList<StateSummary> sum = new ArrayList<>();
-    Connection conn = null;
+    public ArrayList<StateSummary> getStateSummary(String metric, String startStation, String endStation,
+            String startDate, String endDate, String order, String time) {
+        ArrayList<StateSummary> sum = new ArrayList<>();
+        Connection conn = null;
 
     try {
         conn = DriverManager.getConnection(DATABASE);
@@ -422,9 +427,9 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
                         "GROUP BY L.state " +
                         "ORDER BY total_value " + (order.equals("Asc") ? "ASC" : "DESC") + " LIMIT 50";
 
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        stmt.setQueryTimeout(30);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            stmt.setQueryTimeout(30);
 
         while(rs.next()) {
             sum.add(new StateSummary(
@@ -448,8 +453,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
     return sum;
     }
 
-
-        public ArrayList<String> getStates() {
+    public ArrayList<String> getStates() {
         ArrayList<String> states = new ArrayList<>();
         Connection conn = null;
         try {
@@ -460,7 +464,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
             String query = """
                     Select Distinct state
                     from location
-                    order by state;                                        
+                    order by state;
                                         """;
             ResultSet rs = stmt.executeQuery(query);
 
@@ -468,12 +472,13 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
                 states.add(rs.getString("state"));
             }
             stmt.close();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             System.err.println("GetStates Error: " + e.getMessage());
         } finally {
             try {
-                if (conn != null) conn.close();
-            } catch(SQLException e) {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -484,16 +489,16 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
         ArrayList<Station> station = new ArrayList<>();
 
         Connection conn = null;
-        
+
         String metricTable = "";
         String valueColumn = "";
 
-        if(metric.equalsIgnoreCase("maxTemp")){
+        if (metric.equalsIgnoreCase("maxTemp")) {
             metricTable = "Temperature";
             valueColumn = "maxTemp";
         }
 
-        else if(metric.equalsIgnoreCase("minTemp")){
+        else if (metric.equalsIgnoreCase("minTemp")) {
             metricTable = "Temperature";
             valueColumn = "minTemp";
         }
@@ -503,12 +508,12 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
             valueColumn = "evaporation";
         }
 
-        else if(metric.equalsIgnoreCase("precipitation")){
+        else if (metric.equalsIgnoreCase("precipitation")) {
             metricTable = "Precipitation";
             valueColumn = "precipitation";
         }
 
-        else if(metric.equalsIgnoreCase("sunshine")){
+        else if (metric.equalsIgnoreCase("sunshine")) {
             metricTable = "Sunshine";
             valueColumn = "sunshine";
         }
@@ -523,11 +528,11 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
             valueColumn = metric + time;
         }
 
-        else{
+        else {
             return station;
         }
-        try{
-         conn = DriverManager.getConnection(DATABASE);
+        try {
+            conn = DriverManager.getConnection(DATABASE);
 
             String query = "SELECT l.site, l.name, l.state, l.lat, l.longt, v.[" + valueColumn + "]" +
                  " FROM location as l JOIN "+ metricTable +" as v ON l.site = v.location " +
@@ -536,7 +541,7 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
                  " ORDER BY " + (sortBy.equals("latitude") ? "l.lat" : "l." + sortBy);
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setQueryTimeout(30);
-            
+
             stmt.setString(1, State);
             stmt.setDouble(2, startLat);
             stmt.setDouble(3, endLat);
@@ -550,16 +555,17 @@ public ArrayList<StateSummary> getStateSummary(String metric, String startStatio
                 double latitude = rs.getDouble("lat");
                 double longitude = rs.getDouble("longt");
                 String value = rs.getString(valueColumn);
-                
+
                 station.add(new Station(site, name, state, latitude, longitude, value));
             }
             stmt.close();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             System.err.println("GetData Error: " + e.getMessage());
         } finally {
             try {
-                if (conn != null) conn.close();
-            } catch(SQLException e) {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
