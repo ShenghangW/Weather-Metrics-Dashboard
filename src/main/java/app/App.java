@@ -42,7 +42,7 @@ public class App {
         app.get(PageStationData.URL, new PageStationData());
         app.get(PageSearchMetrics.URL, new PageSearchMetrics());
         app.get(PageDataQuality.URL, new PageDataQuality());
-        app.get(PageST3A.URL, new PageST3A());
+        app.get(PageStationSimilarity.URL, new PageStationSimilarity());
         app.get(PageST3B.URL, new PageST3B());
         app.get(PageCorrelation.URL, new PageCorrelation());
 
@@ -52,7 +52,7 @@ public class App {
         app.post(PageStationData.URL, new PageStationData());
         app.post(PageSearchMetrics.URL, new PageSearchMetrics());
         app.post(PageDataQuality.URL, new PageDataQuality());
-        app.post(PageST3A.URL, new PageST3A());
+        app.post(PageStationSimilarity.URL, new PageStationSimilarity());
         app.post(PageST3B.URL, new PageST3B());
         app.post(PageCorrelation.URL, new PageCorrelation());
     }
