@@ -27,12 +27,11 @@ public class PageCorrelation implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-        // Create a simple HTML webpage in a String
         String html = "<html>";
 
         // Add some Head information
-        html = html + "<head>" + 
-               "<title>Correlation</title>";
+        html = html + "<head>" +
+                "<title>Data Correlation</title>";
 
         // Add some CSS (external file)
         html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
@@ -42,23 +41,27 @@ public class PageCorrelation implements Handler {
         html = html + "<body>";
 
         // Add the topnav
-        // This uses a Java v15+ Text Block
-        html += PageIndex.navbar; 
+        html = html + PageIndex.navbar;
 
         // Add header content block
         html = html + """
-            <div class='header'>
-                <h1>Correlation</h1>
-            </div>
-        """;
+                    <div class='correlationHeader'>
+                        <h1>Data Correlation</h1>
+                    </div>
+                """;
 
         // Add Div for page Content
         html = html + "<div class='content'>";
 
         // Add HTML for the page content
         html = html + """
-            <p>Subtask 3.C page content</p>
+            <p>This page can be used to investigate correlation between weather metrics. Please select a reference weather 
+            station and the metric of interest. Results can be grouped over various time periods.</p>
             """;
+
+        html += PageDataQuality.dropScript;
+
+        html += "<form action='/correlation' method='post'>";
 
         // Close Content div
         html = html + "</div>";
