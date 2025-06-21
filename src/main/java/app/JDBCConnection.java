@@ -661,4 +661,118 @@ String query =
     return summaries;
 }
 
+public ArrayList<SimilarStation> getSimilarStations(String refStation, String metric,
+    int start1, int end1, int start2, int end2, int count, String time) {
+
+    ArrayList<SimilarStation> similarStations = new ArrayList<>();
+    Connection conn = null;
+    Statement stmt = null;
+
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        stmt = conn.createStatement();
+
+        String metricTable;
+        String valueColumn;
+
+        if (metric.equalsIgnoreCase("maxTemp")) {
+            metricTable = "Temperature";
+            valueColumn = "maxTemp";
+        } else if (metric.equalsIgnoreCase("minTemp")) {
+            metricTable = "Temperature";
+            valueColumn = "minTemp";
+        } else if (metric.equalsIgnoreCase("avgTemp")) {
+            metricTable = "Temperature";
+            valueColumn = "(maxTemp + minTemp) / 2.0";
+        } else if (metric.equalsIgnoreCase("evaporation")) {
+            metricTable = "Evaporation";
+            valueColumn = "evaporation";
+        } else if (metric.equalsIgnoreCase("precipitation")) {
+            metricTable = "Precipitation";
+            valueColumn = "precipitation";
+        } else if (metric.equalsIgnoreCase("sunshine")) {
+            metricTable = "Sunshine";
+            valueColumn = "sunshine";
+        } else if (metric.equalsIgnoreCase("okta")) {
+            metricTable = "Cloud";
+            valueColumn = "okta" + time;
+        } else if (metric.equalsIgnoreCase("humid")) {
+            metricTable = "Humidity";
+            valueColumn = "humid" + time;
+        } else {
+            throw new IllegalArgumentException("Invalid metric: " + metric);
+        }
+
+        String refQuery = 
+            "WITH Period1 AS (" +
+            "    SELECT AVG(" + valueColumn + ") AS avg1 FROM " + metricTable +
+            "    WHERE location = '" + refStation + "' " +
+            "    AND CAST(SUBSTR(YMD, 1, 4) AS INT) BETWEEN " + start1 + " AND " + end1 +
+            "), Period2 AS (" +
+            "    SELECT AVG(" + valueColumn + ") AS avg2 FROM " + metricTable +
+            "    WHERE location = '" + refStation + "' " +
+            "    AND CAST(SUBSTR(YMD, 1, 4) AS INT) BETWEEN " + start2 + " AND " + end2 +
+            ") SELECT avg1, avg2 FROM Period1, Period2;";
+
+        ResultSet refRs = stmt.executeQuery(refQuery);
+        if (!refRs.next()) return similarStations;
+
+        double refAvg1 = refRs.getDouble("avg1");
+        double refAvg2 = refRs.getDouble("avg2");
+        if (refAvg1 == 0 || Double.isNaN(refAvg1)) {
+            System.err.println("Reference station has no valid data for Period 1 — aborting similarity calculation.");
+            return similarStations;
+        }
+
+        double refChange = (refAvg2 - refAvg1) / refAvg1 * 100.0;
+        refRs.close();
+
+        String mainQuery =
+            "WITH Periods AS (" +
+            "    SELECT l.site, l.name, " +
+            "           AVG(CASE WHEN CAST(SUBSTR(t.YMD, 1, 4) AS INT) BETWEEN " + start1 + " AND " + end1 +
+            " THEN " + valueColumn + " END) AS avg1, " +
+            "           AVG(CASE WHEN CAST(SUBSTR(t.YMD, 1, 4) AS INT) BETWEEN " + start2 + " AND " + end2 +
+            " THEN " + valueColumn + " END) AS avg2 " +
+            "    FROM " + metricTable + " t " +
+            "    JOIN location l ON t.location = l.site " +
+            "    GROUP BY l.site" +
+            ") " +
+            "SELECT site, name, avg1, avg2, " +
+            "       ((avg2 - avg1) / avg1 * 100.0) AS percentChange, " +
+            "       ABS(((avg2 - avg1) / avg1 * 100.0) - " + refChange + ") AS similarityScore " +
+            "FROM Periods " +
+            "WHERE avg1 IS NOT NULL AND avg2 IS NOT NULL AND site != '" + refStation + "' " +
+            "ORDER BY similarityScore " +
+            "LIMIT " + count + ";";
+
+        ResultSet rs = stmt.executeQuery(mainQuery);
+
+        while (rs.next()) {
+            similarStations.add(new SimilarStation(
+                rs.getString("site"),
+                rs.getString("name"),
+                rs.getDouble("avg1"),
+                rs.getDouble("avg2"),
+                rs.getDouble("percentChange"),
+                rs.getDouble("similarityScore")
+            ));
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+
+    } catch(SQLException e) {
+        System.err.println("getSimilarStation Error: " + e.getMessage());
+    } finally {
+        try {
+            if (conn != null) conn.close();
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    return similarStations;
+}
 }
