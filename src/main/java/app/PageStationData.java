@@ -19,8 +19,8 @@ public class PageStationData implements Handler {
         html += "<div class='content'><h1>Weather Stations</h1>";
         html += """
             <h2>Welcome to the Weather Station Data Explorer</h2>
-            <p>Use the form below to search for Australian weather stations based on region, latitude range, and specific environmental metrics.</p>
-            <p>Whether you are interested in cloud coverage, humidity at different times of day, or long-term precipitation trends—this page helps you compare station-level data easily.</p>
+            <p>Use the form below to search for Australian weather stations based on region, latitude range, and specific environmental metrics. After submitting, you will not only see individual station records, but also a regional summary showing station counts and average values for your chosen metric.</p>
+            <p>Whether you are interested in cloud coverage, humidity at different times of day, or long-term precipitation trends, this page helps you compare station-level data easily.</p>
             <p>All values are presented with clarity, and missing entries will be marked as <strong>'No data'</strong>.</p>
             """;
 
