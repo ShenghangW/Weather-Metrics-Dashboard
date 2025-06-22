@@ -18,34 +18,18 @@ public class PageIndex implements Handler {
     // URL of this page relative to http://localhost:7001/
     public static final String URL = "/";
 
-    public static String navbar = """
+   public static String navbar = """
         <div class="topnav">
-        <div class="topnav-left">
-        <a href='/'><img class="logo-main" src="logo.png" /></a>
-            <div class='dropdown'>
-            <span><a href='mission.html'>Our Mission</a></span>
-            <div class='dropdown-content'>
-            <a href='metricExplorer.html'>Metric Explorer</a>
-            </div></div>
-            <div class='dropdown'>
-            <span><a href='data.html'>Our Data</a></span>
-            <div class='dropdown-content'>
-            <a href='dataquality.html'>Data Quality</a>
-            </div></div>
-            <a href='StationSimilarity.html'>similarity</a>
-            </div>
-                <form class="search" action="/searchResults.html" method="get">
-                    <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
-                        <button class="submit-button" type="submit">
-                            <img src="search.png" alt="Search" />
-                        </button>
-                        <button class="filter-button" onclick="openFilter()">Filter</button>
-                </form>
-                    <div class="topnav-right">
-                        <button class="account-button" onclick="openLogin()">Login</button>
-                        <button class="account-button" onclick="openSignup()">Signup</button>
-                    </div>
-                </div>
+            <a href='/'><img class="logo-main" src="logo.png" alt="Home" /></a>
+            <a class="nav-button" href="mission.html">Mission</a>
+            <a class="nav-button" href="data.html">Data</a>
+            <a class="nav-button" href="dataquality.html">Data Quality</a>
+            <a class="nav-button" href="searchResults.html">Station Data</a>
+            <a class="nav-button" href="metricExplorer.html">Metric Explorer</a>
+            <a class="nav-button" href="StationSimilarity.html">Station Similarity</a>
+            <a class="nav-button" href="correlation.html">Data Correlation</a>
+            <a class="nav-button" href="#">More Coming Soon</a>
+        </div>
         """;
     @Override
     public void handle(Context context) throws Exception {
