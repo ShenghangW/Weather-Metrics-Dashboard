@@ -62,24 +62,32 @@ public class PageCorrelation implements Handler {
         html += PageDataQuality.dropScript;
 
         JDBCConnection jdbc = new JDBCConnection();
-        ArrayList<STATE> stateList = jdbc.getStates();
-        ArrayList<SITE> siteList = getSite();
 
-        html += "<form action='/correlation' method='post'>" +
-                "<label for='sites'>Select Weather Station:</label>" +
-                "<select name='sites' id='sites'>";
+        html += "<form action='/correlation' method='post'>";
 
-        int siteNum = 0;
+        html += jdbc.stationDrop();
 
-        for (int i = 0; i < stateList.size(); ++i) {
-            String stateAbbv = stateList.get(i).getState();
-            html += "<optgroup label='" + stateList.get(i).getStateName() + "'>";
-            for (int j = siteNum; stateAbbv.equals(siteList.get(j).getState()) ; ++j) {
-                html += "<option value='" + siteList.get(j).getSite() + "'>" + siteList.get(j).getSiteName() + "</option>";
-                siteNum = j+1;
-            }
-            html += "</optgroup>";
-        }
+        html += "<br>" + PageDataQuality.metricDrop;
+
+        html += """
+                <label for='period'>Group data by: </label>
+                <select name='period' id='period' required>
+                <option value='' disabled selected>Time period</option>
+                <option value='Week'>1 Week</option>
+                <option value='Month'>1 Month</option>
+                <option value='Quarter'>3 Months</option>
+                <option value='Half'>6 Months</option>
+                <option value='Year'>1 Year</option>
+                <option value='HalfDecade'>5 Years</option>
+                <option value='Decade'>10 years</option>
+                </select>
+                </div>
+                <br>
+                <div class='form-group'>
+                <label for="startDate">Start date:</label>
+                <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
+                </div>
+                """;
 
         html += "</form>";
 
@@ -89,7 +97,7 @@ public class PageCorrelation implements Handler {
         // Footer
         html = html + """
             <div class='footer'>
-                <p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>
+                <p>Weather Report(2025)</p>
             </div>
         """;
 
@@ -103,7 +111,7 @@ public class PageCorrelation implements Handler {
     }
 
     
-    public ArrayList<SITE> getSite() {
+    public static ArrayList<SITE> getSite() {
 
         ArrayList<SITE> sites = new ArrayList<SITE>();
 
@@ -121,8 +129,20 @@ public class PageCorrelation implements Handler {
 
             while (results.next()) {
                 String site = results.getString("site");
-                String siteName = results.getString("name");
+                String siteNameUpper = results.getString("name");
                 String state = results.getString("state");
+
+                String siteNameLower = siteNameUpper.toLowerCase();
+                String siteName = "";
+                siteName += String.valueOf(siteNameLower.charAt(0)).toUpperCase();
+
+                for (int i = 1 ; i < siteNameLower.length() ; ++i) {
+                    siteName += String.valueOf(siteNameLower.charAt(i));
+                    if (((siteNameLower.charAt(i) == ' ') && (siteNameLower.charAt(i+1) != '(')) || (siteNameLower.charAt(i) == '(')) {
+                        siteName += String.valueOf(siteNameLower.charAt(i+1)).toUpperCase();
+                        ++i;
+                    }
+                }
 
                 SITE sitesObj = new SITE(site, siteName, state);
 

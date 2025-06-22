@@ -71,7 +71,7 @@ public class PageDataQuality implements Handler {
         public static String metricDrop = """
                     <label for="metric"></label>
                     <select name="metric" id="metric" onchange="updateOptions()" required>
-                    <option value="" disabled selected>Select dataset</option>
+                    <option value="" disabled selected>Select dataset</option>  
                     <option value="precipitation">Precipitation</option>
                     <option value="evaporation">Evaporation</option>
                     <option value="maxtemp">Temperature (Max)</option>
@@ -148,7 +148,8 @@ public class PageDataQuality implements Handler {
         html += dropScript;
         html += """
                     <p>To take a closer look at the poor quality data, please select the following options:</p>
-                    <form action="/dataquality.html" method="post">
+                    <form class =''action="/dataquality.html" method="post">
+                    <div class='form-group'>
                     <label for="flag"></label>
                     <select name="flag" id="flag" required>
                     <option value="" disabled selected>Select quality flag</option>
@@ -162,27 +163,38 @@ public class PageDataQuality implements Handler {
             }
         }
 
-        html += "</select>";
+        html += "</select></div><div class='form-group'>";
 
         html += metricDrop;
 
         html += """ 
+                    </div>
                     <br>
+                    <div class='form-group'>
                     <label for="startDate">Start date:</label>
                     <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
+                    </div>
+                    <div class='form-group'>
                     <label for="endDate">End date:</label>
                     <input type="date" id="endDate" name="endDate" placeholder="dd/mm/yyyy" required></input><br>
+                    </div>
+                    <div class='form-group'>
                     <label for="sort">Sort by:</label>
                     <select name="sort" id="sort">
                     <option value="location">Location ID</option>
                     <option value="name">Site Name</option>
                     <option value="date">Date</option>
                     <option value="measure">Measurement</option>
-                    </select><label for="ascdesc"></label><select name="ascdesc" id="ascdesc">
+                    </select>
+                    </div>
+                    <div class='form-group'>
+                    <label for="ascdesc"></label><select name="ascdesc" id="ascdesc">
                     <option value="asc">Ascending</option>
                     <option value="desc">Descending</option>
                     </select>
+                    </div>
                     <p><b>State Summary</b></p>
+                    <div class='form-group'>
                     <label for="state">Select State:</label>
                     <select name="state" id="state">
                     <option value="A.A.T">Antarctic Territories</option>
@@ -195,7 +207,8 @@ public class PageDataQuality implements Handler {
                     <option value="VIC">Victoria</option>
                     <option value="W.A.">Western Australia</option>
                     </select>
-                    <br><button type='submit'>Submit</button>
+                    </div>
+                    <br><button class = 'submit-button' type='submit'>Submit</button>
                     </form>
                 """;
 
@@ -293,7 +306,7 @@ public class PageDataQuality implements Handler {
         // Footer
         html = html + """
                     <div class='footer'>
-                        <p>COSC2803 - Studio Project Starter Code (ACC Apr2025)</p>
+                        <p>Weather Report(2025)</p>
                     </div>
                 """;
 

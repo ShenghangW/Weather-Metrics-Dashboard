@@ -218,42 +218,6 @@ public class JDBCConnection {
         return metadata;
     }
 
-    public String getYearRange() {
-        String yearRange = "Unknown";
-        Connection conn = null;
-
-        try {
-            conn = DriverManager.getConnection(DATABASE);
-            Statement stmt = conn.createStatement();
-            stmt.setQueryTimeout(30);
-
-            String query = """
-                    select min(STRFTIME('%Y',date)) as minyear, max(STRFTIME('%Y',date)) as maxyear
-                    from datetime
-                    limit 1;
-                    """;
-            ResultSet rs = stmt.executeQuery(query);
-
-            if (rs.next()) {
-                int minYear = rs.getInt("minYear");
-                int maxYear = rs.getInt("maxYear");
-                yearRange = minYear + " - " + maxYear;
-            }
-
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println("getYearRange Error: " + e.getMessage());
-        } finally {
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-        }
-        return yearRange;
-    }
-
     public String getColdestStationName() {
         String result = "No data available";
         Connection conn = null;

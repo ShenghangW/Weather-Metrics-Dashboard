@@ -21,7 +21,7 @@ public class PageIndex implements Handler {
    public static String navbar = """
         <div class="topnav">
             <a href='/'><img class="logo-main" src="logo.png" alt="Home" /></a>
-            <a class="nav-button" href="mission.html">Mission</a>
+            <a class="nav-button" href="mission.html">Our Mission</a>
             <a class="nav-button" href="data.html">Data</a>
             <a class="nav-button" href="dataquality.html">Data Quality</a>
             <a class="nav-button" href="searchResults.html">Station Data</a>
@@ -46,8 +46,6 @@ public class PageIndex implements Handler {
         html = html + "</head>";
 
         JDBCConnection jdbc = new JDBCConnection();
-
-        String yearRange = jdbc.getYearRange();
         String coldest = jdbc.getColdestStationName();
         String rainfall = jdbc.getMostRainfallStationName();
         
@@ -55,7 +53,6 @@ public class PageIndex implements Handler {
         html = html + "<body>";
 
         // Add the topnav
-        // This uses a Java v15+ Text Block
         html = html + navbar;
 
         // Add header content block
@@ -70,12 +67,35 @@ public class PageIndex implements Handler {
 
         // Add Div for page Content
         html = html + "<div class='content'>";
+        
+        // Add a new section for featured pages
+        html += """
+            <div class='featured-section'>
+                <div class='featured-item'>
+                    <img src='waveMout.png' alt='Mission' class='featured-image' draggable=false />
+                    <div class='featured-text'>
+                        <h2>Our Mission</h2>
+                        <p>Learn more about our mission and goals.</p>
+                        <a href='mission.html' class='featured-link'>Explore Mission</a>
+                    </div>
+                </div>
+
+                <div class='featured-item'>
+                    <img src='datapageheaderbg.jpg' alt='Data' class='featured-image' draggable=false />
+                    <div class='featured-text'>
+                        <h2>Data Insights</h2>
+                        <p>Explore the latest weather data and trends.</p>
+                        <a href='data.html' class='featured-link'>View Data</a>
+                    </div>
+                </div>
+            </div>
+        """;
 
         // Add HTML for the page content
         html += "<div class='slide-show'>" +
         "<div class='slides'>" +
         "<div class='slide year-image'><div class='slide-content'>" +
-        "<h2>Year Range</h2><p>" + yearRange + "</p>" +
+        "<h2>Year Range</h2><p>1970-2020</p>" +
         "</div></div>" +
 
         "<div class ='slide coldest-bg'><div class='slide-content'>" +
@@ -93,7 +113,7 @@ public class PageIndex implements Handler {
         // Footer
         html = html + """
             <div class='footer'>
-                <p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>
+                <p>Weather Report(2025)</p>
             </div>
         """;
 

@@ -73,15 +73,18 @@ html += """
         <a href='StationSimilarity.html'>Similar Stations</a>
     </div> 
 
-    <div><h1 class='metricExplorerHeader'>Similar Station Finder</h1></div>
+    <div><h1 class='similarstationheader'>Similar Station Finder</h1></div>
 
     <div class='content'>
-        <h2 class='form-heading2'>Find Similar Stations Based on Climate Metric Changes</h2>
+        <h2 class='page-sim-heading2'>Find Similar Stations Based on Climate Metric Changes</h2>
 
         <form action='/StationSimilarity.html' method='POST'>
             <div class='form-group'>
-                <label for='refStation'>Reference Station ID:</label>
-                <input type='number' name='refStation' id='refStation' placeholder='e.g. 86071' required>
+                """;
+
+        html += jdbc.stationDrop();
+        
+        html += """
             </div>
 
             <div class='form-group'>
@@ -129,13 +132,13 @@ html += """
                 <input type='number' name='count' id='count' min='1' value='5' required>
             </div>
 
-            <button type='submit'>Find Similar Stations</button>
+            <button class ='submit-button'type='submit'>Find Similar Stations</button>
         </form>
     </div>
 """;
 
     if (context.method().equals("POST")) {
-        String refStation = context.formParam("refStation");
+        String refStation = context.formParam("sites");
         String metric = context.formParam("metric");
         int start1 = Integer.parseInt(context.formParam("start1"));
         int end1 = Integer.parseInt(context.formParam("end1"));
@@ -193,7 +196,7 @@ html += """
     html += """
         </div>
         <div class='footer'>
-            <p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>
+            <p>Weather Report</p>
         </div>
         </body>
         </html>
