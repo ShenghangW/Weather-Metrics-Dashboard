@@ -49,14 +49,14 @@ public class PageStationData implements Handler {
                 """;
 
         JDBCConnection jdbc = new JDBCConnection();
-        ArrayList<String> states = jdbc.getStates();
+        ArrayList<STATE> states = jdbc.getStates();
             html += """
 
                 <script>
                 function updateOptions() {
                 const metric = document.getElementById('metric').value;
                 const time = document.getElementById('time');
-                time.innerHTML = ''; // Clear previous options
+                time.innerHTML = '';
 
                 const options = {
                     humid: [
@@ -100,9 +100,10 @@ public class PageStationData implements Handler {
                 <select name="state" required>
                 <option value="" disabled selected>Choose a state</option><br><br>
                 """;
-            for (String state : states) {
-                html += "<option value='" + state + "'>" + state + "</option>";
+            for (STATE stateInfo : states) { 
+                html += "<option value='" + stateInfo.getState() + "'>" + stateInfo.getStateName() + "</option>";
             }
+
             html += """
                         </select>
                         <label for="metric"></label>
