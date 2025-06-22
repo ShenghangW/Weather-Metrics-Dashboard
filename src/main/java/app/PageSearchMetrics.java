@@ -149,7 +149,7 @@ public class PageSearchMetrics implements Handler {
 
         html += "</div>"
             + "<div class='footer'>"
-            + "<p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>"
+            + "<p>Weather Report(2025)</p>"
             + "</div></body></html>";
 
         context.html(html);

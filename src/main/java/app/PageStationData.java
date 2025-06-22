@@ -80,6 +80,21 @@ public class PageStationData implements Handler {
             <p>Use the form below to filter stations based on region, latitude range, and environmental metrics.</p>
             <p>Results will include individual station records and a regional summary with station counts and average values.</p>
             <p>Missing entries will be marked as <strong>'No data'</strong>.</p>
+            <h3>Latitude Ranges by State</h3>
+            <p>Refer to this table to help guide your search by selecting appropriate latitude ranges based on the selected state:</p>
+            <table class='reference-table'>
+            <tr><th>State</th><th>Latitude Range</th></tr>
+            <tr><td>AAT</td><td>-68.5744 to -54.4994</td></tr>
+            <tr><td>N.S.W.</td><td>-36.4917 to -28.6356</td></tr>
+            <tr><td>N.T.</td><td>-23.7951 to -11.4021</td></tr>
+            <tr><td>A.E.T.</td><td>-29.0389 to -12.1892</td></tr>
+            <tr><td>QLD</td><td>-28.6217 to -12.7850</td></tr>
+            <tr><td>S.A.</td><td>-37.7473 to -27.5553</td></tr>
+            <tr><td>TAS</td><td>-43.6578 to -40.0911</td></tr>
+            <tr><td>VIC</td><td>-39.1297 to -34.2358</td></tr>
+            <tr><td>W.A.</td><td>-34.3728 to -13.7542</td></tr>
+            </table>
+            <br>
 
             <form action='/searchResults.html' method='POST'>
                 <div class='form-group'>
@@ -245,7 +260,11 @@ public class PageStationData implements Handler {
                 html += "<p>No regional summary available.</p>";
             }
         }
-
+        html += """
+                <div class='footer'>
+                <p>Weather Report(2025)</p>
+                </div>
+                """;
         html += "</body></html>";
         context.html(html);
     }

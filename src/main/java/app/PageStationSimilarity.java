@@ -76,7 +76,7 @@ html += """
     <div><h1 class='similarstationheader'>Similar Station Finder</h1></div>
 
     <div class='content'>
-        <h2 class='pagesim-heading2'>Find Similar Stations Based on Climate Metric Changes</h2>
+        <h2 class='page-sim-heading2'>Find Similar Stations Based on Climate Metric Changes</h2>
 
         <form action='/StationSimilarity.html' method='POST'>
             <div class='form-group'>
@@ -193,7 +193,7 @@ html += """
     html += """
         </div>
         <div class='footer'>
-            <p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>
+            <p>Weather Report</p>
         </div>
         </body>
         </html>
