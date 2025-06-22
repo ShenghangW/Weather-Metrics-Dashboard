@@ -73,7 +73,7 @@ html += """
         <a href='StationSimilarity.html'>Similar Stations</a>
     </div> 
 
-    <div><h1 class='metricExplorerHeader'>Similar Station Finder</h1></div>
+    <div><h1 class='similarstationheader'>Similar Station Finder</h1></div>
 
     <div class='content'>
         <h2 class='form-heading2'>Find Similar Stations Based on Climate Metric Changes</h2>
