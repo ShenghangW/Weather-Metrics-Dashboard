@@ -83,37 +83,28 @@ public class PageCorrelation implements Handler {
     }
 
     
-    public ArrayList<STATE> getStates() {
-        // Create the ArrayList of FlagQuality objects to return
-        // Create an array called flags
+    public ArrayList<SITE> getSite() {
+
         ArrayList<FLAG> flags = new ArrayList<FLAG>();
 
-        // Setup the variable for the JDBC connection
         Connection connection = null;
 
         try {
-            // Connect to JDBC database
             connection = DriverManager.getConnection(DATABASE);
 
-            // Prepare a new SQL Query & Set a timeout
             Statement statement = connection.createStatement();
-            // put in a timeout incase the db is not running
             statement.setQueryTimeout(30);
 
-            // The SQL Query to be executed
-            String query = "SELECT * FROM FlagQuality";
+            String query = "select site, state from location order by state";
 
-            // Put the SQL results into a result set
             ResultSet results = statement.executeQuery(query);
 
-            // Process all of the results
             while (results.next()) {
-                // Lookup the columns we need
-                String flagtype = results.getString("flag");
-                String description = results.getString("description");
+                String site = results.getString("site");
+                String state = results.getString("state");
 
                 // Create an FLAG Object
-                FLAG flagsObj = new FLAG(flagtype, description);
+                SITE sitesObj = new SITE(site, state);
 
                 // Add the FLAG object to the flags array
                 flags.add(flagsObj);
