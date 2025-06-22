@@ -69,7 +69,6 @@ public class PageDataQuality implements Handler {
             """;
 
         public static String metricDrop = """
-                    </select>
                     <label for="metric"></label>
                     <select name="metric" id="metric" onchange="updateOptions()" required>
                     <option value="" disabled selected>Select dataset</option>
@@ -162,6 +161,8 @@ public class PageDataQuality implements Handler {
                 html += "<option value='" + flagName + "'>" + flagName + "</option>";
             }
         }
+
+        html += "</select>";
 
         html += metricDrop;
 
