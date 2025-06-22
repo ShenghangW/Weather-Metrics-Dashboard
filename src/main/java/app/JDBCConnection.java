@@ -2,7 +2,7 @@ package app;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+import java.util.Collections;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -413,7 +413,6 @@ public class JDBCConnection {
                 tableName = "temperature";
             }
 
-            // Build query with correct column reference
             String query = "SELECT L.state, COALESCE(SUM(x." + actualColumn + "), 0) AS total_value " +
                     "FROM Location L " +
                     "LEFT JOIN " + tableName + " x ON L.site = x.Location " +
@@ -775,4 +774,148 @@ public class JDBCConnection {
 
         return similarStations;
     }
+
+    
+    private String getAggregationFunction(String metric) {
+        switch (metric) {
+            case "Precipitation":
+            case "Evaporation":
+            case "Sunshine":
+                return "SUM";
+            case "MinTemp":
+            case "MaxTemp":
+            case "Humidity":
+            case "Cloud":
+                return "AVG";
+            default:
+                return "SUM";
+        }
+    }
+    public String getUnit(String metric) {
+        switch (metric) {
+        case "Precipitation":
+        case "Evaporation":
+            return "mm";
+        case "MinTemp":
+        case "MaxTemp":
+            return "&deg;C";
+        case "Humidity":
+            return "%";
+        case "Sunshine":
+            return "hrs";
+        case "Cloud":
+            return "oktas";
+        default:
+            return "";
+    }
+}
+
+
+
+public ArrayList<SimilarMetric> getSimilarMetrics(String refMetric, int startYear1, int endYear1, 
+        int startYear2, int endYear2, String time, int count) {
+    
+    ArrayList<SimilarMetric> results = new ArrayList<>();
+    Connection conn = null;
+    
+    try {
+        conn = DriverManager.getConnection(DATABASE);
+        
+        double[] refAvgs = getAggregatedValues(refMetric, time, startYear1, endYear1, startYear2, endYear2, conn);
+        double refChange = refAvgs[0] != 0 ? ((refAvgs[1] - refAvgs[0]) / refAvgs[0]) * 100 : 0;
+        
+        results.add(new SimilarMetric(
+            refMetric,
+            refAvgs[0],
+            refAvgs[1],
+            refChange,
+            0.0
+        ));
+        
+        String[] metrics = {"Precipitation", "Evaporation", "MinTemp", "MaxTemp",
+                            "Humidity", "Sunshine", "Cloud"};
+        
+        for(String metric : metrics) {
+            if(metric.equals(refMetric)) continue;
+            
+            double[] metricAvgs = getAggregatedValues(metric, time, startYear1, endYear1, startYear2, endYear2, conn);
+            double metricChange = metricAvgs[0] != 0 ?
+                ((metricAvgs[1] - metricAvgs[0]) / metricAvgs[0]) * 100 : 0;
+            
+            double diff = metricChange - refChange;
+            
+            results.add(new SimilarMetric(
+                metric,
+                metricAvgs[0],
+                metricAvgs[1],
+                metricChange,
+                diff
+            ));
+        }
+        
+        Collections.sort(results, (a, b) ->
+            Double.compare(Math.abs(a.getDiff()), Math.abs(b.getDiff()))
+        );
+        
+        return results.size() <= count ? results : new ArrayList<>(results.subList(0, count));
+        
+    } catch(SQLException e) {
+        System.err.println("getSimilarMetrics Error: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if(conn != null) conn.close();
+        } catch(SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    return results;
+}
+
+private double[] getAggregatedValues(String metric, String time,int startYear1, int endYear1, int startYear2, int endYear2, Connection conn) throws SQLException {
+    
+    String tableName;
+    String valueColumn;
+    String aggFunction = getAggregationFunction(metric);
+
+    if ("Humidity".equals(metric)) {
+        tableName = "humidity";
+        valueColumn = "humid" + time;
+    } else if ("Cloud".equals(metric)) {
+        tableName = "cloud";
+        valueColumn = "okta" + time;
+    } else if ("MinTemp".equals(metric) || "MaxTemp".equals(metric)) {
+        tableName = "temperature";
+        valueColumn = metric;
+    } else {
+        tableName = metric.toLowerCase();
+        valueColumn = metric.toLowerCase();
+    }
+    
+    String cleanValue = "CAST(REPLACE(" + valueColumn + ", ' Y', '') AS REAL)";
+    
+    String query = "SELECT " +
+        aggFunction + "(CASE WHEN CAST(SUBSTR(YMD, 1, 4) AS INTEGER) BETWEEN ? AND ? THEN " + cleanValue + " END) AS period1, " +
+        aggFunction + "(CASE WHEN CAST(SUBSTR(YMD, 1, 4) AS INTEGER) BETWEEN ? AND ? THEN " + cleanValue + " END) AS period2 " +
+        "FROM " + tableName;
+    
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, startYear1);
+        stmt.setInt(2, endYear1);
+        stmt.setInt(3, startYear2);
+        stmt.setInt(4, endYear2);
+        
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()) {
+            Object period1Obj = rs.getObject("period1");
+            Object period2Obj = rs.getObject("period2");
+            
+            double period1 = (period1Obj != null) ? rs.getDouble("period1") : 0;
+            double period2 = (period2Obj != null) ? rs.getDouble("period2") : 0;
+            
+            return new double[]{period1, period2};
+        }
+    }
+    return new double[]{0, 0};
+}
 }
