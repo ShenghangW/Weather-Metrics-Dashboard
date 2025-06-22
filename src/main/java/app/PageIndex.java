@@ -29,7 +29,6 @@ public class PageIndex implements Handler {
             <a class="nav-button" href="StationSimilarity.html">Station Similarity</a>
             <a class="nav-button" href="metricSimilarity.html">Metric Similarity</a>
             <a class="nav-button" href="correlation.html">Data Correlation</a>
-            <a class="nav-button" href="#">More Coming Soon</a>
         </div>
         """;
     @Override
