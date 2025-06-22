@@ -880,4 +880,30 @@ private double[] getAggregatedValues(String metric, String time,int startYear1, 
     }
     return new double[]{0, 0};
 }
+
+public String stationDrop() {
+        ArrayList<STATE> stateList = getStates();
+        ArrayList<SITE> siteList = PageCorrelation.getSite();
+
+        String html =   "<label for='sites'><b>Select Weather Station: </b></label>" +
+                        "<select name='sites' id='sites' required>" +
+                        "<option value='' disabled selected>Weather Station Name</option>";
+
+        int siteNum = 0;
+
+        for (int i = 0; i < stateList.size(); ++i) {
+            String stateAbbv = stateList.get(i).getState();
+            html += "<optgroup label='" + stateList.get(i).getStateName() + "'>";
+            for (int j = siteNum; (j < siteList.size()) && stateAbbv.equals(siteList.get(j).getState()) ; ++j) {
+                html += "<option value='" + siteList.get(j).getSite() + "'>" + siteList.get(j).getSiteName() + "</option>";
+                siteNum = j+1;
+            }
+            html += "</optgroup>";
+        }
+
+        html += "</select>";
+
+        return html;
+    }
+    
 }
