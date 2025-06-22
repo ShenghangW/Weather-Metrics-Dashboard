@@ -19,8 +19,8 @@ public class PageStationData implements Handler {
         html += "<div class='content'><h1>Weather Stations</h1>";
         html += """
             <h2>Welcome to the Weather Station Data Explorer</h2>
-            <p>Use the form below to search for Australian weather stations based on region, latitude range, and specific environmental metrics.</p>
-            <p>Whether you are interested in cloud coverage, humidity at different times of day, or long-term precipitation trends—this page helps you compare station-level data easily.</p>
+            <p>Use the form below to search for Australian weather stations based on region, latitude range, and specific environmental metrics. After submitting, you will not only see individual station records, but also a regional summary showing station counts and average values for your chosen metric.</p>
+            <p>Whether you are interested in cloud coverage, humidity at different times of day, or long-term precipitation trends, this page helps you compare station-level data easily.</p>
             <p>All values are presented with clarity, and missing entries will be marked as <strong>'No data'</strong>.</p>
             """;
 
@@ -95,7 +95,7 @@ public class PageStationData implements Handler {
                         </select><br><br>
                         <div id="time-container" style="display:none;">
                         <label for="time">Select time:</label>
-                        <select name="time" id="time" required></select>
+                        <select name="time" id="time"></select>
                         </div>
                         <label for="startLat">Starting Latitude:</label>
                         <input type="number" name="startLat" step="0.01" required><br><br> 
@@ -153,6 +153,27 @@ public class PageStationData implements Handler {
                 }
 
                  html += "</table>";
+               
+
+                ArrayList<RegionSummary> regionSummaries = jdbc.getRegionalSummary(state, startLat, endLat, metric, time);
+
+                html += "<h3>Summary by Region</h3>";
+                if (!regionSummaries.isEmpty()) {
+                    html += "<table class='team-table'>";
+                    html += "<tr><th>Region</th><th>Number of Stations</th><th>Average " + displayName + "</th></tr>";
+                
+                    for (RegionSummary rsum : regionSummaries) {
+                        html += "<tr>" +
+                                "<td>" + rsum.getRegionName() + "</td>" +
+                                "<td>" + rsum.getStationCount() + "</td>" +
+                                "<td>" + String.format("%.2f", rsum.getAverageMetric()) + "</td>" +
+                                "</tr>";
+                    }
+
+                html += "</table>";
+            } else {
+                html += "<p>No regional summary available for these conditions.</p>";
+            }
             html += "<a href='/search.html'>Back</a>";
             }
 

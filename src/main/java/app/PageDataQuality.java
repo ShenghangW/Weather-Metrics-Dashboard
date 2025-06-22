@@ -24,6 +24,69 @@ public class PageDataQuality implements Handler {
     // URL of this page relative to http://localhost:7001/
     public static final String URL = "/dataquality.html";
 
+    public static String dropScript = """
+            <script>
+            function updateOptions() {
+            const metric = document.getElementById('metric').value;
+            const time = document.getElementById('time');
+            time.innerHTML = ''; // Clear previous options
+
+            const options = {
+                humid: [
+                    { text: '12am', value: '00' },
+                    { text: '3am', value: '03' },
+                    { text: '6am', value: '06' },
+                    { text: '9am', value: '09' },
+                    { text: '12pm', value: '12' },
+                    { text: '3pm', value: '15' },
+                    { text: '6pm', value: '18' },
+                    { text: '9pm', value: '21' }
+                ],
+                okta: [
+                    { text: '12am', value: '00' },
+                    { text: '3am', value: '03' },
+                    { text: '6am', value: '06' },
+                    { text: '9am', value: '09' },
+                    { text: '12pm', value: '12' },
+                    { text: '3pm', value: '15' },
+                    { text: '6pm', value: '18' },
+                    { text: '9pm', value: '21' }
+                ]
+            };
+            if (metric && options[metric]) {
+            options[metric].forEach(function(item) {
+            const option = document.createElement('option');
+            option.text = item.text;
+            option.value = item.value;
+            time.appendChild(option);
+            });
+            document.getElementById('time-container').style.display = 'block';
+            } else {
+            document.getElementById('time-container').style.display = 'none';
+            }
+            }
+            </script>
+            """;
+
+        public static String metricDrop = """
+                    </select>
+                    <label for="metric"></label>
+                    <select name="metric" id="metric" onchange="updateOptions()" required>
+                    <option value="" disabled selected>Select dataset</option>
+                    <option value="precipitation">Precipitation</option>
+                    <option value="evaporation">Evaporation</option>
+                    <option value="maxtemp">Temperature (Max)</option>
+                    <option value="mintemp">Temperature (Min)</option>
+                    <option value="humid">Humidity</option>
+                    <option value="sunshine">Sunshine</option>
+                    <option value="okta">Cloud Coverage</option>
+                    </select>
+                    <div id='time-container' style='display:none; margin-top:10px;'>
+                    <label for='time'>Select time of day:</label>
+                    <select name='time' id='time'></select>
+                    </div>
+                """;
+
     @Override
     public void handle(Context context) throws Exception {
         // Create a simple HTML webpage in a String
@@ -83,49 +146,7 @@ public class PageDataQuality implements Handler {
 
         html += "</table>";
 
-        html += """
-                <script>
-                function updateOptions() {
-                const metric = document.getElementById('metric').value;
-                const time = document.getElementById('time');
-                time.innerHTML = ''; // Clear previous options
-
-                const options = {
-                    humid: [
-                        { text: '12am', value: '00' },
-                        { text: '3am', value: '03' },
-                        { text: '6am', value: '06' },
-                        { text: '9am', value: '09' },
-                        { text: '12pm', value: '12' },
-                        { text: '3pm', value: '15' },
-                        { text: '6pm', value: '18' },
-                        { text: '9pm', value: '21' }
-                    ],
-                    okta: [
-                        { text: '12am', value: '00' },
-                        { text: '3am', value: '03' },
-                        { text: '6am', value: '06' },
-                        { text: '9am', value: '09' },
-                        { text: '12pm', value: '12' },
-                        { text: '3pm', value: '15' },
-                        { text: '6pm', value: '18' },
-                        { text: '9pm', value: '21' }
-                    ]
-                };
-                if (metric && options[metric]) {
-                options[metric].forEach(function(item) {
-                const option = document.createElement('option');
-                option.text = item.text;
-                option.value = item.value;
-                time.appendChild(option);
-                });
-                document.getElementById('time-container').style.display = 'block';
-                } else {
-                document.getElementById('time-container').style.display = 'none';
-                }
-                }
-                </script>
-                """;
+        html += dropScript;
         html += """
                     <p>To take a closer look at the poor quality data, please select the following options:</p>
                     <form action="/dataquality.html" method="post">
@@ -142,23 +163,10 @@ public class PageDataQuality implements Handler {
             }
         }
 
-        html += """
-                    </select>
-                    <label for="metric"></label>
-                    <select name="metric" id="metric" onchange="updateOptions()" required>
-                    <option value="" disabled selected>Select dataset</option>
-                    <option value="precipitation">Precipitation</option>
-                    <option value="evaporation">Evaporation</option>
-                    <option value="maxtemp">Temperature (Max)</option>
-                    <option value="mintemp">Temperature (Min)</option>
-                    <option value="humid">Humidity</option>
-                    <option value="sunshine">Sunshine</option>
-                    <option value="okta">Cloud Coverage</option>
-                    </select>
-                    <div id='time-container' style='display:none; margin-top:10px;'>
-                    <label for='time'>Select time of day:</label>
-                    <select name='time' id='time'></select>
-                    </div><br>
+        html += metricDrop;
+
+        html += """ 
+                    <br>
                     <label for="startDate">Start date:</label>
                     <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
                     <label for="endDate">End date:</label>
@@ -256,8 +264,7 @@ public class PageDataQuality implements Handler {
                 html += "<h1>Summary</h1>" +
                         "<p>Number of each quality flag for " + metricName + " data in " + selectedState +
                         " from " + selectedStartDate + " to " + selectedEndDate + ".";
-            
-                                
+
                 html += """
                         <table class='descTables'><tr class='descTables'>
                         <th class='descTables'>Flag Name</th>
@@ -407,7 +414,8 @@ public class PageDataQuality implements Handler {
             statement.setQueryTimeout(30);
 
             // The SQL Query to be executed
-            String query = "select location l, state s, ymd date, " + metricTime + "qual FlagName, count(" + metricTime +
+            String query = "select location l, state s, ymd date, " + metricTime + "qual FlagName, count(" + metricTime
+                    +
                     "qual) NumberOfFlags from " + metricTable + " join location on " + metricTable
                     + ".Location == location.site where state == '" +
                     state + "' and (date between '" + startDate + "' and '" + endDate

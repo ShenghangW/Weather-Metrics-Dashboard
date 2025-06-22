@@ -32,6 +32,7 @@ public class PageIndex implements Handler {
             <div class='dropdown-content'>
             <a href='dataquality.html'>Data Quality</a>
             </div></div>
+            <a href='page3A.html'>similarity</a>
             </div>
                 <form class="search" action="/searchResults.html" method="get">
                     <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
@@ -88,7 +89,7 @@ public class PageIndex implements Handler {
         // Add HTML for the page content
         html += "<div class='slide-show'>" +
         "<div class='slides'>" +
-        "<div class='slide'><div class='slide-content'>" +
+        "<div class='slide year-image'><div class='slide-content'>" +
         "<h2>Year Range</h2><p>" + yearRange + "</p>" +
         "</div></div>" +
 
