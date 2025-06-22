@@ -85,8 +85,8 @@ public class PageST3B implements Handler {
                 + "<label for='count'>Number of Similar Metrics:</label>"
                 + "<input type='number' name='count' id='count' min='1' value='5' required>"
                 + "</div>"
-                
-                + "<button class='form-group' type='submit'>Analyse Metric</button>"
+
+                + "<button class='submit-button' type='submit'>Analyse Metric</button>"
                 + "</form>";
 
         if (context.method().equals("POST")) {
