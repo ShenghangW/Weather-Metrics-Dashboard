@@ -61,7 +61,27 @@ public class PageCorrelation implements Handler {
 
         html += PageDataQuality.dropScript;
 
-        html += "<form action='/correlation' method='post'>";
+        JDBCConnection jdbc = new JDBCConnection();
+        ArrayList<STATE> stateList = jdbc.getStates();
+        ArrayList<SITE> siteList = getSite();
+
+        html += "<form action='/correlation' method='post'>" +
+                "<label for='sites'>Select Weather Station:</label>" +
+                "<select name='sites' id='sites'>";
+
+        int siteNum = 0;
+
+        for (int i = 0; i < stateList.size(); ++i) {
+            String stateAbbv = stateList.get(i).getState();
+            html += "<optgroup label='" + stateList.get(i).getStateName() + "'>";
+            for (int j = siteNum; stateAbbv.equals(siteList.get(j).getState()) ; ++j) {
+                html += "<option value='" + siteList.get(j).getSite() + "'>" + siteList.get(j).getSiteName() + "</option>";
+                siteNum = j+1;
+            }
+            html += "</optgroup>";
+        }
+
+        html += "</form>";
 
         // Close Content div
         html = html + "</div>";
@@ -85,50 +105,44 @@ public class PageCorrelation implements Handler {
     
     public ArrayList<SITE> getSite() {
 
-        ArrayList<FLAG> flags = new ArrayList<FLAG>();
+        ArrayList<SITE> sites = new ArrayList<SITE>();
 
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection(DATABASE);
+            connection = DriverManager.getConnection(JDBCConnection.DATABASE);
 
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);
 
-            String query = "select site, state from location order by state";
+            String query = "select site, name, state from location order by state";
 
             ResultSet results = statement.executeQuery(query);
 
             while (results.next()) {
                 String site = results.getString("site");
+                String siteName = results.getString("name");
                 String state = results.getString("state");
 
-                // Create an FLAG Object
-                SITE sitesObj = new SITE(site, state);
+                SITE sitesObj = new SITE(site, siteName, state);
 
-                // Add the FLAG object to the flags array
-                flags.add(flagsObj);
+                sites.add(sitesObj);
             }
 
-            // Close the statement because we are done with it
             statement.close();
         } catch (SQLException e) {
-            // If there is an error, lets just pring the error
             System.err.println(e.getMessage());
         } finally {
-            // Safety code to cleanup
             try {
                 if (connection != null) {
                     connection.close();
                 }
             } catch (SQLException e) {
-                // connection close failed.
                 System.err.println(e.getMessage());
             }
         }
 
-        // Finally we return all of the countries
-        return flags;
+        return sites;
     }
 
 }
