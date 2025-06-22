@@ -26,9 +26,9 @@ public class PageIndex implements Handler {
             <a class="nav-button" href="dataquality.html">Data Quality</a>
             <a class="nav-button" href="searchResults.html">Station Data</a>
             <a class="nav-button" href="metricExplorer.html">Metric Explorer</a>
-            <a class="nav-button" href="StationSimilarity.html">Similar Stations</a>
+            <a class="nav-button" href="StationSimilarity.html">Station Similarity</a>
+            <a class="nav-button" href="metricSimilarity.html">Metric Similarity</a>
             <a class="nav-button" href="correlation.html">Data Correlation</a>
-            <a class="nav-button" href="#">More Coming Soon</a>
         </div>
         """;
     @Override
