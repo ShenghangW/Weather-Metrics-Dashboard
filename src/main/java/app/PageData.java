@@ -101,16 +101,16 @@ public class PageData implements Handler {
         
         for (int i = 0 ; i < headings.size() ; ++i){
             html += "<h2>" + headings.get(i) + "</h2>" +
-                    "<table class='descTables'>" +
+                    "<table class='team-table'>" +
                     "<tr>" +
-                    "<th class='descTables'>Data Name</th>" +
-                    "<th class='descTables'>Description</th>" +
+                    "<th>Data Name</th>" +
+                    "<th>Description</th>" +
                     "</tr>";
 
             for(int j = indices.get(i) ; j < indices.get(i+1) ; ++j){
-                html += "<tr><td class='descTables'>" +
+                html += "<tr><td>" +
                         metadata.get(j).getField() +
-                        "</td><td class='descTables'>" +
+                        "</td><td>" +
                         metadata.get(j).getDescription() +
                         "</td></tr>";
             }

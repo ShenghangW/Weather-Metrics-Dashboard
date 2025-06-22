@@ -128,7 +128,7 @@ public class PageDataQuality implements Handler {
         ArrayList<FLAG> flags = jdbc.getFlags();
 
         html += """
-                <table class='descTables'>
+                <tableclass='team-table'>
                 <tr>
                 <th>Flag</th>
                 <th>Description</th>
@@ -139,8 +139,8 @@ public class PageDataQuality implements Handler {
             String flagName = flagsObj.getFlag();
             String flagDesc = flagsObj.getDescription();
 
-            html += "<tr class='descTables'><td class='descTables'>" + flagName +
-                    "</td><td class='descTables'>" + flagDesc + "</td></tr>";
+            html += "<tr><td>" + flagName +
+                    "</td><td>" + flagDesc + "</td></tr>";
         }
 
         html += "</table>";
@@ -250,11 +250,11 @@ public class PageDataQuality implements Handler {
                         + "</td><td class='selected-params'><b> Dataset:</b> " + metricName +
                         "</td></tr></table></p>" +
                         """
-                                <table class='descTables'><tr class='descTables'>
-                                <th class='descTables'>LocationID</th>
-                                <th class='descTables'>Site Name</th>
-                                <th class='descTables'>Date</th>
-                                <th class='descTables'>
+                                <tableclass='team-table'><tr>
+                                <th>LocationID</th>
+                                <th>Site Name</th>
+                                <th>Date</th>
+                                <th>
                                 """ + metricName +
                         """
                                 </th></tr>
@@ -266,10 +266,10 @@ public class PageDataQuality implements Handler {
                     String date = qualityObj.getDate();
                     String value = qualityObj.getMetricValue();
 
-                    html += "<tr class='descTables'><td class='descTables'>" + location +
-                            "</td><td class='descTables'>" + name +
-                            "</td><td class='descTables'>" + date +
-                            "</td><td class='descTables'>" + value +
+                    html += "<tr><td>" + location +
+                            "</td><td>" + name +
+                            "</td><td>" + date +
+                            "</td><td>" + value +
                             "</td></tr>";
 
                 }
@@ -280,17 +280,17 @@ public class PageDataQuality implements Handler {
                         " from " + selectedStartDate + " to " + selectedEndDate + ".";
 
                 html += """
-                        <table class='descTables'><tr class='descTables'>
-                        <th class='descTables'>Flag Name</th>
-                        <th class='descTables'>Number of Flags</th></tr>
+                        <tableclass='team-table'><tr>
+                        <th>Flag Name</th>
+                        <th>Number of Flags</th></tr>
                         """;
 
                 for (SUMMARY summaryObj : summaryList) {
                     String flagName = summaryObj.getFlagName();
                     String flagNumber = summaryObj.getFlagNumber();
 
-                    html += "<tr class='descTables'><td class='descTables'>" + flagName +
-                            "</td><td class='descTables'>" + flagNumber + "</td></tr>";
+                    html += "<tr><td>" + flagName +
+                            "</td><td>" + flagNumber + "</td></tr>";
                 }
 
                 html += "</table>";
