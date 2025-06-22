@@ -794,15 +794,13 @@ public class JDBCConnection {
     public String getUnit(String metric) {
         switch (metric) {
         case "Precipitation":
-        case "Evaporation":
-            return "mm";
+        case "Evaporation": return "mm";
         case "MinTemp":
         case "MaxTemp":
             return "&deg;C";
         case "Humidity":
             return "%";
-        case "Sunshine":
-            return "hrs";
+        case "Sunshine": return "hrs";
         case "Cloud":
             return "oktas";
         default:
