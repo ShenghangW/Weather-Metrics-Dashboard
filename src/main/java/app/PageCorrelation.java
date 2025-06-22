@@ -62,24 +62,12 @@ public class PageCorrelation implements Handler {
         html += PageDataQuality.dropScript;
 
         JDBCConnection jdbc = new JDBCConnection();
-        ArrayList<STATE> stateList = jdbc.getStates();
-        ArrayList<SITE> siteList = getSite();
 
-        html += "<form action='/correlation' method='post'>" +
-                "<label for='sites'>Select Weather Station:</label>" +
-                "<select name='sites' id='sites'>";
+        html += "<form action='/correlation' method='post'>";
 
-        int siteNum = 0;
+        html += jdbc.stationDrop();
 
-        for (int i = 0; i < stateList.size(); ++i) {
-            String stateAbbv = stateList.get(i).getState();
-            html += "<optgroup label='" + stateList.get(i).getStateName() + "'>";
-            for (int j = siteNum; stateAbbv.equals(siteList.get(j).getState()) ; ++j) {
-                html += "<option value='" + siteList.get(j).getSite() + "'>" + siteList.get(j).getSiteName() + "</option>";
-                siteNum = j+1;
-            }
-            html += "</optgroup>";
-        }
+        html += PageDataQuality.metricDrop;
 
         html += "</form>";
 
@@ -103,7 +91,7 @@ public class PageCorrelation implements Handler {
     }
 
     
-    public ArrayList<SITE> getSite() {
+    public static ArrayList<SITE> getSite() {
 
         ArrayList<SITE> sites = new ArrayList<SITE>();
 
@@ -121,8 +109,20 @@ public class PageCorrelation implements Handler {
 
             while (results.next()) {
                 String site = results.getString("site");
-                String siteName = results.getString("name");
+                String siteNameUpper = results.getString("name");
                 String state = results.getString("state");
+
+                String siteNameLower = siteNameUpper.toLowerCase();
+                String siteName = "";
+                siteName += String.valueOf(siteNameLower.charAt(0)).toUpperCase();
+
+                for (int i = 1 ; i < siteNameLower.length() ; ++i) {
+                    siteName += String.valueOf(siteNameLower.charAt(i));
+                    if (((siteNameLower.charAt(i) == ' ') && (siteNameLower.charAt(i+1) != '(')) || (siteNameLower.charAt(i) == '(')) {
+                        siteName += String.valueOf(siteNameLower.charAt(i+1)).toUpperCase();
+                        ++i;
+                    }
+                }
 
                 SITE sitesObj = new SITE(site, siteName, state);
 
