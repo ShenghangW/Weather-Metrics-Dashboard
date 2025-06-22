@@ -5,25 +5,10 @@ import java.util.ArrayList;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-/**
- * Example Index HTML class using Javalin
- * <p>
- * Generate a static HTML page using Javalin
- * by writing the raw HTML into a Java String object
- *
- * @author Timothy Wiley, 2023. email: timothy.wiley@rmit.edu.au
- * @author Santha Sumanasekara, 2021. email: santha.sumanasekara@rmit.edu.au
- */
 public class PageST3B implements Handler {
 
     // URL of this page relative to http://localhost:7001/
-    public static final String URL = "/page3B.html";
+    public static final String URL = "/metricSimilarity.html";
 
     @Override
     public void handle(Context context) throws Exception {
@@ -32,7 +17,7 @@ public class PageST3B implements Handler {
 
         // Add some Head information
         html = html + "<head>" + 
-               "<title>Subtask 3.2</title>";
+                "<title>Subtask B Level 3</title>";
 
         // Add some CSS (external file)
         html = html + "<link rel='stylesheet' type='text/css' href='common.css' />";
@@ -43,25 +28,16 @@ public class PageST3B implements Handler {
 
         // Add the topnav
         // This uses a Java v15+ Text Block
-        html = html + """
-            <div class='topnav'>
-                <a href='/'>Homepage</a>
-                <a href='mission.html'>Our Mission</a>
-		        <a href="equipment.html">Climate Equipment</a>
-                <a href='page2A.html'>Sub Task 2.A</a>
-                <a href='page2B.html'>Sub Task 2.B</a>
-                <a href='page2C.html'>Sub Task 2.C</a>
-                <a href='page3A.html'>Sub Task 3.A</a>
-                <a href='page3B.html'>Sub Task 3.B</a>
-                <a href='page3C.html'>Sub Task 3.C</a>
-            </div>
-        """;
+        html += PageIndex.navbar;
 
         // Add header content block
         html = html + """
-            <div class='header'>
-                <h1>Subtask 3.B</h1>
-            </div>
+        <div class='pageRef'><a href='/'>Home/</a>
+        <a href='metricSimilarity.html'>page3B</a>
+        </div>
+        
+        <div><h1 class='level3Heading'>Compare Metric Silimilarity</h1></div>
+
         """;
 
         // Add Div for page Content
@@ -69,7 +45,46 @@ public class PageST3B implements Handler {
 
         // Add HTML for the page content
         html = html + """
-            <p>Subtask 3.B page content</p>
+            <h2 class=form-heading2>Explore and Find Metric Similarity across 2 Time periods</h2>
+
+            <form action='/metricSimilarity' method='POST'>
+            <div class='form-group'>
+            <lable for='metric'>Select a metric:</lable>
+            <select name='metric' id='metric' required>
+            <option value='Precipitation'>Precipitaion</option>
+            <option value='Evaporation'>Evaporation</option>
+            <option value='MinTemp'>Temperature (Min)</option>
+            <option value-'MaxTemp'>Temperature (Max)</option>
+            <option value='Humidity'>Humidity</option>
+            <option value='Sunshine'>Sunshine</option>
+            <option value='Cloud'>Cloud</option>
+            </select></div>
+
+            <div class='form-group'>
+            <lable for='period1'>Select a range for the First Period</lable>
+            <input name='startDate1' type='date' id='period1'> to
+            <input name='endDate1' type='date' id='endDate1'>
+            </div>
+
+            <div class='form-group'>
+            <lable for='period2'>Select a range for the Second Period</lable>
+            <input name='startDate2' type='date' id='period2'></input> to
+            <input name='endDate2' type='date' id='endDate2'></input>
+            </div>
+
+            <div class='form-group'>
+            <lable for='order'>Order in<l/lable>
+            <select name='order' id='order'>
+            <option value='Asc'>Ascending</option>
+            <option value='Desc'>Descending</option>
+            </select></div>
+
+            <br>
+            <button class='form-group' type='submit'>Analyse Metric</button>
+            </form>
+
+
+
             """;
 
         // Close Content div

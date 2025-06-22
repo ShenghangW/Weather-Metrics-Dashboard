@@ -50,6 +50,7 @@ public class PageSearchMetrics implements Handler {
                 + "</div>"
 
                 + "<div><h1 class='metricExplorerHeader'>Metric Explorer</h1></div>"
+                
                 + "<div class='content'>"
                 + "<h2 class='form-heading2'>Explore a Metric Across Various Stations</h2>"
 
@@ -59,8 +60,8 @@ public class PageSearchMetrics implements Handler {
                 +     "<select name='metric' id='metric' required>"
                 +       "<option value='Precipitation'>Precipitation</option>"
                 +       "<option value='Evaporation'>Evaporation</option>"
-                +       "<option value='MinTemp'>Min Temperature</option>"
-                +       "<option value='MaxTemp'>Max Temperature</option>"
+                +       "<option value='MinTemp'>Temperature (Min)</option>"
+                +       "<option value='MaxTemp'>Temperature (Max)</option>"
                 +       "<option value='Humidity'>Humidity</option>"
                 +       "<option value='Sunshine'>Sunshine</option>"
                 +       "<option value='Cloud'>Cloud Coverage</option>"
