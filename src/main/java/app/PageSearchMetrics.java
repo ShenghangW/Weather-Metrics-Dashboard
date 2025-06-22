@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 
@@ -94,7 +95,7 @@ public class PageSearchMetrics implements Handler {
                 +     "</select>"
                 +   "</div>"
                 + "<br>"
-                +   "<button class='form-group' type='submit'>Analyse Metric</button>"
+                +   "<button class='submit-button' type='submit'>Analyse Metric</button>"
                 + "</form>";
 
         if (context.method().equals("POST")) {

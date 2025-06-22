@@ -135,7 +135,7 @@ public class PageStationData implements Handler {
                     </select>
                 </div>
 
-                <button type='submit'>Search</button>
+                <button class='submit-button'type='submit'>Search</button>
             </form>
         </div>
         """;
