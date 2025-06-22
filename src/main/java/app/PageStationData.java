@@ -16,14 +16,37 @@ public class PageStationData implements Handler {
 
         html += PageIndex.navbar;
 
+        html += """
+    <br>
+   <div class='pageRef'>
+        <a href='/'>Home/</a>
+        <a href='StationSimilarity.html'>Similar Stations</a>
+    </div> 
+         """;
         html += "<div class='content'><h1>Weather Stations</h1>";
         html += """
             <h2>Welcome to the Weather Station Data Explorer</h2>
-            <p>Use the form below to search for Australian weather stations based on region, latitude range, and specific environmental metrics. After submitting, you will not only see individual station records, but also a regional summary showing station counts and average values for your chosen metric.</p>
+            <p>Use the form below to search for Australian weather stations based on region, latitude range, and specific environmental metrics.</p>
+            <p>After submitting, you will not only see individual station records, but also a regional summary showing station counts and average values for your chosen metric.<p>
             <p>Whether you are interested in cloud coverage, humidity at different times of day, or long-term precipitation trends, this page helps you compare station-level data easily.</p>
             <p>All values are presented with clarity, and missing entries will be marked as <strong>'No data'</strong>.</p>
             """;
 
+        html += """
+                    <table class='reference-table'>
+                        <tr><th>State</th><th>Latitude Range</th></tr>
+                        <tr><td>AAT</td><td>-68.57 to -54.50</td></tr>
+                        <tr><td>N.S.W.</td><td>-36.49 to -28.64</td></tr>
+                        <tr><td>N.T.</td><td>-23.80 to -11.40</td></tr>
+                        <tr><td>A.E.T.</td><td>-29.04 to -12.19</td></tr>
+                        <tr><td>QLD</td><td>-28.62 to -12.79</td></tr>
+                        <tr><td>S.A.</td><td>-37.75 to -27.56</td></tr>
+                        <tr><td>TAS</td><td>-43.66 to -40.09</td></tr>
+                        <tr><td>VIC</td><td>-39.13 to -34.24</td></tr>
+                        <tr><td>W.A.</td><td>-34.37 to -13.75</td></tr>
+                    </table>
+                    <br>
+                """;
 
         JDBCConnection jdbc = new JDBCConnection();
         ArrayList<String> states = jdbc.getStates();
@@ -72,7 +95,7 @@ public class PageStationData implements Handler {
                 </script>
                     """;
             html += """
-                <form action="/searchResults.html" method="post">
+                <form class = "form-group" action="/searchResults.html" method="post">
                 <label for="state">Select a state:</label>
                 <select name="state" required>
                 <option value="" disabled selected>Choose a state</option><br><br>
@@ -95,7 +118,7 @@ public class PageStationData implements Handler {
                         </select><br><br>
                         <div id="time-container" style="display:none;">
                         <label for="time">Select time:</label>
-                        <select name="time" id="time"></select>
+                        <select name="time" id="time"></select><br><br>
                         </div>
                         <label for="startLat">Starting Latitude:</label>
                         <input type="number" name="startLat" step="0.01" required><br><br> 
@@ -134,7 +157,7 @@ public class PageStationData implements Handler {
                      html += "<table class = 'team-table'>";
                            
 
-                html += "<tr><th>Site</th><th>Name</th><th>State</th><th>Latitude</th><th>Longitude</th><th>" + displayName + "</th></tr>";
+                html += "<tr><th>Station ID</th><th>Name</th><th>State</th><th>Latitude</th><th>Longitude</th><th>" + displayName + "</th></tr>";
                 
 
                 for(Station s : stationList){
