@@ -77,7 +77,7 @@ public class PageCorrelation implements Handler {
         // Footer
         html = html + """
             <div class='footer'>
-                <p>COSC2803 - Studio Project Starter Code (ACC-Apr2025)</p>
+                <p>Weather Report(2025)</p>
             </div>
         """;
 

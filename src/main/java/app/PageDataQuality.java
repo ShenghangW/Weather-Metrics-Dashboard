@@ -69,7 +69,6 @@ public class PageDataQuality implements Handler {
             """;
 
         public static String metricDrop = """
-                    <div class='form-group'>
                     <label for="metric"></label>
                     <select name="metric" id="metric" onchange="updateOptions()" required>
                     <option value="" disabled selected>Select dataset</option>
@@ -84,7 +83,6 @@ public class PageDataQuality implements Handler {
                     <div id='time-container' style='display:none; margin-top:10px;'>
                     <label for='time'>Select time of day:</label>
                     <select name='time' id='time'></select>
-                    </div>
                     </div>
                 """;
 
@@ -165,11 +163,12 @@ public class PageDataQuality implements Handler {
             }
         }
 
-        html += "</select></div>";
+        html += "</select></div><div class='form-group'>";
 
         html += metricDrop;
 
         html += """ 
+                    </div>
                     <br>
                     <div class='form-group'>
                     <label for="startDate">Start date:</label>
@@ -307,7 +306,7 @@ public class PageDataQuality implements Handler {
         // Footer
         html = html + """
                     <div class='footer'>
-                        <p>COSC2803 - Studio Project Starter Code (ACC Apr2025)</p>
+                        <p>Weather Report(2025)</p>
                     </div>
                 """;
 
