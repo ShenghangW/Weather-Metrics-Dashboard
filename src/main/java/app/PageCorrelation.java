@@ -67,7 +67,27 @@ public class PageCorrelation implements Handler {
 
         html += jdbc.stationDrop();
 
-        html += PageDataQuality.metricDrop;
+        html += "<br>" + PageDataQuality.metricDrop;
+
+        html += """
+                <label for='period'>Group data by: </label>
+                <select name='period' id='period' required>
+                <option value='' disabled selected>Time period</option>
+                <option value='Week'>1 Week</option>
+                <option value='Month'>1 Month</option>
+                <option value='Quarter'>3 Months</option>
+                <option value='Half'>6 Months</option>
+                <option value='Year'>1 Year</option>
+                <option value='HalfDecade'>5 Years</option>
+                <option value='Decade'>10 years</option>
+                </select>
+                </div>
+                <br>
+                <div class='form-group'>
+                <label for="startDate">Start date:</label>
+                <input type="date" id="startDate" name="startDate" placeholder="dd/mm/yyyy" required></input><br>
+                </div>
+                """;
 
         html += "</form>";
 

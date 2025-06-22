@@ -71,7 +71,7 @@ public class PageDataQuality implements Handler {
         public static String metricDrop = """
                     <label for="metric"></label>
                     <select name="metric" id="metric" onchange="updateOptions()" required>
-                    <option value="" disabled selected>Select dataset</option>
+                    <option value="" disabled selected>Select dataset</option>  
                     <option value="precipitation">Precipitation</option>
                     <option value="evaporation">Evaporation</option>
                     <option value="maxtemp">Temperature (Max)</option>
