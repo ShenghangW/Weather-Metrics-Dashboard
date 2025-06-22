@@ -73,10 +73,10 @@ html += """
         <a href='StationSimilarity.html'>Similar Stations</a>
     </div> 
 
-    <div><h1 class='metricExplorerHeader'>Similar Station Finder</h1></div>
+    <div><h1 class='similarstationheader'>Similar Station Finder</h1></div>
 
     <div class='content'>
-        <h2 class='form-heading2'>Find Similar Stations Based on Climate Metric Changes</h2>
+        <h2 class='pagesim-heading2'>Find Similar Stations Based on Climate Metric Changes</h2>
 
         <form action='/StationSimilarity.html' method='POST'>
             <div class='form-group'>
@@ -129,7 +129,7 @@ html += """
                 <input type='number' name='count' id='count' min='1' value='5' required>
             </div>
 
-            <button type='submit'>Find Similar Stations</button>
+            <button class ='submit-button'type='submit'>Find Similar Stations</button>
         </form>
     </div>
 """;

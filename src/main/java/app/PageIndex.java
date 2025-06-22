@@ -18,34 +18,18 @@ public class PageIndex implements Handler {
     // URL of this page relative to http://localhost:7001/
     public static final String URL = "/";
 
-    public static String navbar = """
+   public static String navbar = """
         <div class="topnav">
-        <div class="topnav-left">
-        <a href='/'><img class="logo-main" src="logo.png" /></a>
-            <div class='dropdown'>
-            <span><a href='mission.html'>Our Mission</a></span>
-            <div class='dropdown-content'>
-            <a href='metricExplorer.html'>Metric Explorer</a>
-            </div></div>
-            <div class='dropdown'>
-            <span><a href='data.html'>Our Data</a></span>
-            <div class='dropdown-content'>
-            <a href='dataquality.html'>Data Quality</a>
-            </div></div>
-            <a href='StationSimilarity.html'>similarity</a>
-            </div>
-                <form class="search" action="/searchResults.html" method="get">
-                    <input class="search-bar" type="text" name="query" placeholder="Search for Data..." />
-                        <button class="submit-button" type="submit">
-                            <img src="search.png" alt="Search" />
-                        </button>
-                        <button class="filter-button" onclick="openFilter()">Filter</button>
-                </form>
-                    <div class="topnav-right">
-                        <button class="account-button" onclick="openLogin()">Login</button>
-                        <button class="account-button" onclick="openSignup()">Signup</button>
-                    </div>
-                </div>
+            <a href='/'><img class="logo-main" src="logo.png" alt="Home" /></a>
+            <a class="nav-button" href="mission.html">Our Mission</a>
+            <a class="nav-button" href="data.html">Data</a>
+            <a class="nav-button" href="dataquality.html">Data Quality</a>
+            <a class="nav-button" href="searchResults.html">Station Data</a>
+            <a class="nav-button" href="metricExplorer.html">Metric Explorer</a>
+            <a class="nav-button" href="StationSimilarity.html">Similar Stations</a>
+            <a class="nav-button" href="correlation.html">Data Correlation</a>
+            <a class="nav-button" href="#">More Coming Soon</a>
+        </div>
         """;
     @Override
     public void handle(Context context) throws Exception {
@@ -61,8 +45,6 @@ public class PageIndex implements Handler {
         html = html + "</head>";
 
         JDBCConnection jdbc = new JDBCConnection();
-
-        String yearRange = jdbc.getYearRange();
         String coldest = jdbc.getColdestStationName();
         String rainfall = jdbc.getMostRainfallStationName();
         
@@ -70,7 +52,6 @@ public class PageIndex implements Handler {
         html = html + "<body>";
 
         // Add the topnav
-        // This uses a Java v15+ Text Block
         html = html + navbar;
 
         // Add header content block
@@ -85,12 +66,35 @@ public class PageIndex implements Handler {
 
         // Add Div for page Content
         html = html + "<div class='content'>";
+        
+        // Add a new section for featured pages
+        html += """
+            <div class='featured-section'>
+                <div class='featured-item'>
+                    <img src='waveMout.png' alt='Mission' class='featured-image' draggable=false />
+                    <div class='featured-text'>
+                        <h2>Our Mission</h2>
+                        <p>Learn more about our mission and goals.</p>
+                        <a href='mission.html' class='featured-link'>Explore Mission</a>
+                    </div>
+                </div>
+
+                <div class='featured-item'>
+                    <img src='datapageheaderbg.jpg' alt='Data' class='featured-image' draggable=false />
+                    <div class='featured-text'>
+                        <h2>Data Insights</h2>
+                        <p>Explore the latest weather data and trends.</p>
+                        <a href='data.html' class='featured-link'>View Data</a>
+                    </div>
+                </div>
+            </div>
+        """;
 
         // Add HTML for the page content
         html += "<div class='slide-show'>" +
         "<div class='slides'>" +
         "<div class='slide year-image'><div class='slide-content'>" +
-        "<h2>Year Range</h2><p>" + yearRange + "</p>" +
+        "<h2>Year Range</h2><p>1970-2020</p>" +
         "</div></div>" +
 
         "<div class ='slide coldest-bg'><div class='slide-content'>" +
