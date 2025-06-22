@@ -80,8 +80,11 @@ html += """
 
         <form action='/StationSimilarity.html' method='POST'>
             <div class='form-group'>
-                <label for='refStation'>Reference Station ID:</label>
-                <input type='number' name='refStation' id='refStation' placeholder='e.g. 86071' required>
+                """;
+
+        html += jdbc.stationDrop();
+        
+        html += """
             </div>
 
             <div class='form-group'>
@@ -135,7 +138,7 @@ html += """
 """;
 
     if (context.method().equals("POST")) {
-        String refStation = context.formParam("refStation");
+        String refStation = context.formParam("sites");
         String metric = context.formParam("metric");
         int start1 = Integer.parseInt(context.formParam("start1"));
         int end1 = Integer.parseInt(context.formParam("end1"));
