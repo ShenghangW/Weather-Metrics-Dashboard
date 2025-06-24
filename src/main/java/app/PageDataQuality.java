@@ -128,7 +128,7 @@ public class PageDataQuality implements Handler {
         ArrayList<FLAG> flags = jdbc.getFlags();
 
         html += """
-                <tableclass='team-table'>
+                <table class='team-table'>
                 <tr>
                 <th>Flag</th>
                 <th>Description</th>
@@ -148,7 +148,7 @@ public class PageDataQuality implements Handler {
         html += dropScript;
         html += """
                     <p>To take a closer look at the poor quality data, please select the following options:</p>
-                    <form class =''action="/dataquality.html" method="post">
+                    <form action="/dataquality.html" method="post">
                     <div class='form-group'>
                     <label for="flag"></label>
                     <select name="flag" id="flag" required>
