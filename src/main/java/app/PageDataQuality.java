@@ -250,7 +250,7 @@ public class PageDataQuality implements Handler {
                         + "</td><td class='selected-params'><b> Dataset:</b> " + metricName +
                         "</td></tr></table></p>" +
                         """
-                                <tableclass='team-table'><tr>
+                                <table class='team-table'><tr>
                                 <th>LocationID</th>
                                 <th>Site Name</th>
                                 <th>Date</th>
@@ -280,7 +280,7 @@ public class PageDataQuality implements Handler {
                         " from " + selectedStartDate + " to " + selectedEndDate + ".";
 
                 html += """
-                        <tableclass='team-table'><tr>
+                        <table class='team-table'><tr>
                         <th>Flag Name</th>
                         <th>Number of Flags</th></tr>
                         """;
