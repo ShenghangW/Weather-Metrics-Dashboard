@@ -1,8 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/WeoUhvxG)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=17424023&assignment_repo_type=AssignmentRepo)
-# Anthropomorphic Climate Change Studio Project Starter Code (Semester 1 - April 2025)
-Starter code for the Studio Project. This is a simple layout connected to a GitHub Classroom that serves as the basis for implementing the studio project. 
-
 This example program provides:
 
 * A Java class for the Index page (index.html).
@@ -72,39 +67,3 @@ You can run the main webserver program similar to the project workshop activitie
 3. To Build & Run
  - Open the ``src/main/java/app/App.java`` source file, and select "Run" from the pop-up above the main function
 4. Go to: http://localhost:7001
-
-## Running the Helper Program
-The helper program in ``src/main/java/helper/HomelessProcessCSV.java`` can be run separetly from the main webserver. This gives a demonstration of how you can use Java to read the provided CSV files and store the information in an SQLite database. This example transforms the data in the ``database/homeless-2018.csv`` file to match the format of the ``HomelessGroup`` entity as given in the example ER Model for the Homelessness Social Challenge. That is, the code converts the columns of the CSV into rows that can be loaded into the SQLite database using ``INSERT`` statements.
-
-You can run the optional helper program by
-1. Open this ``src/main/java/helper/HomelessProcessCSV.java`` source file
-1. Select "Debug" from the pop-up above the main function (or "Debug Java" from the top-right dropdown)
-1. Allow the program to run
-
-You can modify this file as you wish, for other tables and CSVs. When modifying you may need to pay attention to:
-* ``DATABASE`` field to change the database location
-* ``CSV_FILE`` to change which CSV file is bring read
-* ``categoty``, ``status``, and ``sex`` arrays which should match the setup of the CSV file being read
-* ``INSERT`` statement construction to:
-    * Change the table being used
-    * Column data being stored
-
-## Testing on GitHub Codespaces
-In Semester 2 (September) 2023, you will have access to GitHub Codespaces through the RMIT GitHub Organisation. It is highly recommended to test that your code is fully functional in Codespaces.
-
-GitHub Codespaces will be used as the common location to test and verify your studio project. Specifically, GitHub Codespaces will be used to verify your project in the event the code does not correctly function on the local assessor's computer.
-
-# DEV Container for GitHub Codespaces
-The ```.devcontainer``` folder contains configuration files for GitHub Codespaces.
-This ensures that when the GitHub classroom is cloned, the workspace is correctly configured for Java (V16) and with the required VSCode extensions.
-This folder will not affect a *local* VSCode setup on a computer.
-
-**🚨 DO NOT MODIFY THE CONTENTS OF THIS FOLDER. 🚨**
-
-# Authors
-* Dr. Halil Ali, School of Computing Technologies, STEM College, RMIT University.
-* Dr. Timothy Wiley, School of Computing Technologies, STEM College, RMIT University.
-* Prof. Santha Sumanasekara, School of Computing Technologies, STEM College, RMIT University.
-
-Copyright RMIT University (c) 2024
-
